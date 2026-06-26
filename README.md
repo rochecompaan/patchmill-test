@@ -3,10 +3,31 @@
 Team Lunch Poll is a small greenfield demo app for trying Patchmill on a safe,
 disposable repository.
 
-The app should let a team create a lunch poll, add meal or restaurant options,
-vote on those options, and see the current winner. The repository intentionally
-starts with documentation and issue prompts only. Patchmill agents should build
-the application from the seeded issues.
+The app helps a team create a lunch poll, add meal or restaurant options, vote
+on those options, and see the current winner. The repository intentionally
+starts from seeded issues and grows feature by feature.
+
+## Local development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the app locally:
+
+```bash
+npm run dev
+```
+
+Run checks before submitting changes:
+
+```bash
+npm run check
+```
+
+The check command runs TypeScript validation and a production build.
 
 ## Demo workflow
 
