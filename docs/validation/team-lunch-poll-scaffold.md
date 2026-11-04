@@ -52,3 +52,5 @@ Validation covers Chromium only. It does not include a screen-reader session or 
 Normal code review and frontend review run as separate self-review passes under the kernel workflow. They provide less independent assurance than a fresh reviewer.
 
 The frontend review applies because this delivery introduces layout, styles, responsive behavior, and keyboard navigation. The approved sentence-case headings override the generic title-case guideline. Native skip-link keyboard behavior needs no custom key handler.
+
+The separate normal and frontend self-review passes reviewed source commit `af20d18` against base `d91705a`. Both passed with no findings or deferred items. The review covered the five plan focus conditions, the approved mockup, and the pinned local interface guidelines. No production repairs were necessary.
