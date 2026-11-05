@@ -1,0 +1,138 @@
+:root {
+  color-scheme: light;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  --page: #eef5f0;
+  --surface: #ffffff;
+  --text: #173b2c;
+  --secondary: #425b50;
+  --accent: #23613f;
+  --divider: #c7d8ce;
+  color: var(--text);
+  background: var(--page);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 64px 20px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  padding: 12px;
+  color: var(--accent);
+  background: var(--surface);
+  transform: translateY(-200%);
+  touch-action: manipulation;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.skip-link:hover {
+  color: var(--text);
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
+}
+
+main {
+  max-width: 960px;
+  margin: auto;
+  border-top: 8px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+header {
+  padding: 48px;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+  scroll-margin-top: 20px;
+}
+
+p {
+  max-width: 65ch;
+  margin: 0;
+  color: var(--secondary);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.note {
+  margin-top: 28px;
+  font-size: 16px;
+}
+
+.note strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.poll-areas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--divider);
+}
+
+section {
+  padding: 36px 48px 48px;
+}
+
+section + section {
+  border-left: 1px solid var(--divider);
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+section p {
+  font-size: 16px;
+}
+
+@media (max-width: 639px) {
+  body {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  header,
+  section {
+    padding: 28px 24px;
+  }
+
+  .poll-areas {
+    grid-template-columns: 1fr;
+  }
+
+  section + section {
+    border-left: 0;
+    border-top: 1px solid var(--divider);
+  }
+}
+
+/* No animation or transitions: the page also stays static with reduced motion. */

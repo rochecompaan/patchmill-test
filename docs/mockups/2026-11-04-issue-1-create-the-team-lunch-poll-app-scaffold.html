@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll</title>
+  <style>
+    :root { color-scheme: light; font-family: "Trebuchet MS", Arial, sans-serif; color: #173b2c; background: #eef5f0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 64px 20px; }
+    .skip-link { position: absolute; top: 12px; left: 20px; padding: 12px; background: #fff; transform: translateY(-200%); color: #23613f; }
+    .skip-link:focus { transform: none; }
+    :focus-visible { outline: 3px solid #23613f; outline-offset: 5px; }
+    main { max-width: 960px; margin: auto; background: #fff; border-top: 8px solid #23613f; border-radius: 8px; overflow-wrap: anywhere; }
+    header { padding: 48px; }
+    h1 { margin: 0 0 20px; font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.12; letter-spacing: -0.035em; }
+    p { max-width: 65ch; margin: 0; color: #425b50; font-size: 18px; line-height: 1.6; }
+    .note { margin-top: 28px; font-size: 16px; }
+    .note strong { color: #173b2c; display: block; margin-bottom: 4px; }
+    .poll-areas { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #c7d8ce; }
+    section { padding: 36px 48px 48px; }
+    section + section { border-left: 1px solid #c7d8ce; }
+    h2 { margin: 0 0 14px; font-size: 24px; line-height: 1.25; }
+    section p { font-size: 16px; }
+    @media (max-width: 639px) {
+      body { padding-top: 32px; padding-bottom: 32px; }
+      header { padding: 28px 24px; }
+      .poll-areas { grid-template-columns: 1fr; }
+      section { padding: 28px 24px; }
+      section + section { border-left: 0; border-top: 1px solid #c7d8ce; }
+    }
+    /* The page uses no animation, including for reduced-motion users. */
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" tabindex="-1">
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Decide where or what to eat together. Create a lunch poll, vote as a team, and see the results.</p>
+      <p class="note"><strong>App scaffold</strong>Poll creation, voting, and results are not available yet.</p>
+    </header>
+    <div class="poll-areas">
+      <section aria-labelledby="create-heading">
+        <h2 id="create-heading">Create a poll</h2>
+        <p>The poll creation form will appear here.</p>
+      </section>
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Poll results</h2>
+        <p>Votes and the winning lunch option will appear here.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
