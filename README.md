@@ -33,7 +33,28 @@ npm run dev
 
 Open the local URL that Vite prints. Press Ctrl+C to stop the server.
 
+## Domain model
+
+`src/poll.ts` exports the `Poll`, `PollOption`, and `Vote` interfaces.
+A poll contains its question, ordered lunch options, and anonymous vote records.
+Each vote references a stable option ID. Repeated records count as separate votes.
+The model uses plain JSON-compatible data, without stored vote totals.
+
+`countVotesForOption(poll, optionId)` derives the total for an existing option.
+It returns zero for an absent option or an option without votes.
+It does not change the poll. Callers provide valid data and unique option IDs.
+Forms, storage, and browser-session double-vote prevention remain separate features.
+
 ## Checks and production build
+
+Run the domain behavior tests with Node's built-in test runner:
+
+```bash
+npm test
+```
+
+The tests cover vote counts, empty states, unknown references, exact IDs,
+JSON round trips, and input preservation. No test framework is required.
 
 Run strict TypeScript checks:
 
@@ -48,8 +69,8 @@ npm run build
 ```
 
 The build runs TypeScript checks before Vite writes the output to `dist/`.
-Checks currently cover type checking and production compilation, not an
-automated behavior suite. There is no test framework for this static scaffold.
+Run `npm test` separately for behavior checks. Tests run directly as TypeScript
+on Node.js 24, outside the browser TypeScript configuration.
 
 After a successful build, inspect the production app locally:
 
