@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <main id="main" tabindex="-1">
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Decide where or what to eat together. Create a lunch poll, vote, and find the team favorite.</p>
+    </header>
+    <div class="poll-space">
+      <section aria-labelledby="create-title">
+        <h2 id="create-title">Create a poll</h2>
+        <p>Poll creation will appear here.</p>
+      </section>
+      <section aria-labelledby="results-title">
+        <h2 id="results-title">Results</h2>
+        <p>Team votes and the lunch winner will appear here.</p>
+      </section>
+    </div>
+    <p class="status">This is the app scaffold. Poll creation and voting are not available yet.</p>
+  </main>
+</body>
+</html>

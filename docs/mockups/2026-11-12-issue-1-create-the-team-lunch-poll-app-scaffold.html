@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll</title>
+  <style>
+    :root {
+      color: #17324d;
+      background: #dceeff;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .skip-link { position: absolute; left: 24px; top: -100px; }
+    .skip-link:focus { top: 12px; background: #fff; padding: 8px 12px; }
+    :focus-visible { outline: 3px solid #005fcc; outline-offset: 4px; }
+    main { max-width: 960px; margin: 72px auto; padding: 0 48px; }
+    h1 { margin: 0 0 16px; font-size: 40px; line-height: 1.2; }
+    header p { max-width: 62ch; margin: 0; }
+    .poll-space { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; background: #edf5fa; border-radius: 12px; }
+    section { min-width: 0; padding: 32px; }
+    section + section { border-left: 1px solid #a8bfce; }
+    h2 { font-size: 22px; line-height: 1.3; margin: 0 0 12px; }
+    section p { margin: 0; color: #486074; }
+    .status { margin-top: 20px; color: #486074; }
+    @media (max-width: 639px) {
+      main { margin: 40px auto; padding: 0 24px; }
+      h1 { font-size: 32px; }
+      .poll-space { grid-template-columns: 1fr; margin-top: 32px; }
+      section { padding: 24px; }
+      section + section { border-left: 0; border-top: 1px solid #a8bfce; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <main id="main" tabindex="-1">
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Decide where or what to eat together. Create a lunch poll, vote, and find the team favorite.</p>
+    </header>
+    <div class="poll-space">
+      <section aria-labelledby="create-title">
+        <h2 id="create-title">Create a poll</h2>
+        <p>Poll creation will appear here.</p>
+      </section>
+      <section aria-labelledby="results-title">
+        <h2 id="results-title">Results</h2>
+        <p>Team votes and the lunch winner will appear here.</p>
+      </section>
+    </div>
+    <p class="status">This is the app scaffold. Poll creation and voting are not available yet.</p>
+  </main>
+</body>
+</html>
