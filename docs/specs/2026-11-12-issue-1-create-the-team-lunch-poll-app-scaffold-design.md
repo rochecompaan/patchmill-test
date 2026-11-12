@@ -42,7 +42,7 @@ Use a quiet lunch-table theme. A single shared panel suggests a place where the 
 
 ### Tokens and layout
 
-- Paper: `#FFFFFF`, for the page.
+- Page blue: `#DCEEFF`, for the full page background.
 - Ink: `#17324D`, for headings and body text.
 - Muted ink: `#486074`, for secondary text.
 - Table blue: `#EDF5FA`, for the shared placeholder panel.
