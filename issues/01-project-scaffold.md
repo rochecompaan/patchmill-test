@@ -8,5 +8,5 @@ to build from.
 
 Please include a minimal app shell with a heading, a short description of the
 product, and a placeholder area where poll creation and results will appear.
-Choose a simple TypeScript-friendly setup and document the commands needed to
+Choose a simple Python-friendly setup and document the commands needed to
 install dependencies, run the app locally, and run checks.

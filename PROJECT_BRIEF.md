@@ -12,7 +12,7 @@ what to eat together.
 
 ## Suggested implementation shape
 
-A good first implementation can be a small TypeScript web app using local state
+A good first implementation can be a small Python web app using local state
 and browser storage. A full backend, authentication system, and deployment setup
 are outside the first demo scope unless an issue explicitly asks for them.
 
