@@ -49,6 +49,18 @@ These screenshots show the production preview after its required text appeared:
 - [Mobile shell](screenshots/lunch-poll-scaffold-mobile.png): 320px viewport.
 - [Browser zoom](screenshots/lunch-poll-scaffold-zoom.png): native 200% zoom.
 
+## Frontend review corrections
+
+Frontend review required a shorter description measure and balanced heading wraps.
+The original `65ch` measure allowed 83 actual characters on the first desktop line.
+A temporary browser range check reproduced that limit error and the single-word mobile title line before the repair.
+The description now uses `48ch`, and headings use `text-wrap: balance`.
+The same range check then passed at 320, 720, and 1440 CSS pixels.
+The longest description line is now 58 characters at the tested desktop widths.
+At 320px, the title wraps as “Team” and “Lunch Poll”, without a single-word final line.
+The full development, preview, and native-zoom inspections passed again, and all reference screenshots are current.
+The written specification's character limit takes precedence over the mockup's original `65ch` implementation.
+
 ## Decisions and limits
 
 - Use direct checks instead of static-text tests, as required by the approved Testing Value Gate.
