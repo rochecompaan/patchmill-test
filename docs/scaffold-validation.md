@@ -56,7 +56,7 @@ The original `65ch` measure allowed 83 actual characters on the first desktop li
 A temporary browser range check reproduced that limit error and the single-word mobile title line before the repair.
 The description now uses `48ch`, and headings use `text-wrap: balance`.
 The same range check then passed at 320, 720, and 1440 CSS pixels.
-The longest description line is now 58 characters at the tested desktop widths.
+The longest description line is now 61 characters at the tested desktop widths.
 At 320px, the title wraps as “Team” and “Lunch Poll”, without a single-word final line.
 The full development, preview, and native-zoom inspections passed again, and all reference screenshots are current.
 The written specification's character limit takes precedence over the mockup's original `65ch` implementation.
