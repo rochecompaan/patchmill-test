@@ -28,13 +28,11 @@ export function mountPollApp(root: HTMLElement): void {
 
   const creation = root.querySelector('section')!;
   const form = root.querySelector('form')!;
-  const question = form.querySelector('input')!;
   const optionFields = form.querySelector('.option-fields')!;
   const addButton = form.querySelector('button')!;
-  const optionInputs: HTMLInputElement[] = [];
 
   function appendOption(): HTMLInputElement {
-    const number = optionInputs.length + 1;
+    const number = optionFields.querySelectorAll('input').length + 1;
     const label = document.createElement('label');
     const input = document.createElement('input');
     input.id = `poll-option-${number}`;
@@ -44,7 +42,6 @@ export function mountPollApp(root: HTMLElement): void {
     label.htmlFor = input.id;
     label.textContent = `Option ${number}`;
     optionFields.append(label, input);
-    optionInputs.push(input);
     return input;
   }
 
@@ -76,8 +73,9 @@ export function mountPollApp(root: HTMLElement): void {
   });
 
   root.addEventListener('input', event => {
-    const input = [question, ...optionInputs].find(field => field === event.target);
-    input?.setCustomValidity('');
+    if (event.target instanceof document.defaultView!.HTMLInputElement) {
+      event.target.setCustomValidity('');
+    }
   });
 
   root.addEventListener('submit', event => {
@@ -85,8 +83,9 @@ export function mountPollApp(root: HTMLElement): void {
     event.preventDefault();
     if (currentPoll !== null) return;
 
-    const inputs = [question, ...optionInputs];
-    const values = inputs.map(input => input.value.trim());
+    const inputs = [...form.querySelectorAll('input')];
+    // Include Unicode NEXT LINE as whitespace, as well as ECMAScript trim characters.
+    const values = inputs.map(input => input.value.replace(/^[\s\p{White_Space}]+|[\s\p{White_Space}]+$/gu, ''));
     inputs.forEach((input, index) => {
       const message = index === 0 ? 'Enter a poll question.' : `Enter option ${index}.`;
       input.setCustomValidity(values[index] ? '' : message);

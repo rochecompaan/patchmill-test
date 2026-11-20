@@ -90,7 +90,7 @@ test('retains duplicates and literal text', t => {
 
 // Catches missing trimming, skipped added rows, value loss, and stale custom validity.
 for (const index of [0, 1, 2, 3]) {
-  for (const blank of ['', '   ']) {
+  for (const blank of ['', '   ', '\u0085', '\u00a0', '\ufeff']) {
     test(`rejects blank field ${index} (${JSON.stringify(blank)}) and accepts correction`, t => {
       const { root, inputs, button, fill, submit, document, labels } = app(t);
       button('Add option').click();
