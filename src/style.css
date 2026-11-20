@@ -34,6 +34,7 @@ h1 {
 }
 
 h2 {
+  overflow-wrap: anywhere;
   text-wrap: balance;
   font-size: 1.25rem;
   line-height: 1.3;
@@ -64,6 +65,70 @@ section + section {
   border-top: 1px solid #c4d6cb;
 }
 
+.workspace form > p {
+  margin-bottom: 1rem;
+}
+
+.workspace label {
+  display: block;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.workspace input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+  color: #18352c;
+  background: #fff;
+  border: 1px solid #425c52;
+  border-radius: 0.2rem;
+}
+
+.workspace fieldset {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.workspace legend {
+  font-weight: bold;
+  padding: 0;
+}
+
+.poll-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.workspace button {
+  font: inherit;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #18352c;
+  border-radius: 0.2rem;
+  background: #fff;
+  color: #18352c;
+  cursor: pointer;
+}
+
+.workspace .primary {
+  color: #fff;
+  background: #18352c;
+}
+
+.workspace ol {
+  padding-left: 1.5rem;
+}
+
+.workspace li {
+  overflow-wrap: anywhere;
+  padding: 0.25rem 0;
+}
+
 .note {
   margin-top: 1.5rem;
   max-width: 65ch;
@@ -72,6 +137,12 @@ section + section {
 :focus-visible {
   outline: 3px solid #005fcc;
   outline-offset: 4px;
+}
+
+@media (max-width: 24rem) {
+  .workspace section {
+    padding: 1.25rem;
+  }
 }
 
 @media (min-width: 44rem) {
