@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll — Issue #1 scaffold mockup</title>
+  <style>
+    :root { color: #18352c; background: #fff; font-family: "Trebuchet MS", Arial, sans-serif; font-size: 16px; line-height: 1.6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(100%, 62.5rem); margin-inline: auto; padding: 3.5rem 1.25rem; }
+    header { border-top: 0.4rem solid #18352c; padding-top: 1.5rem; }
+    h1 { font-size: 2.5rem; line-height: 1.15; margin: 0 0 1rem; overflow-wrap: anywhere; }
+    h2 { font-size: 1.25rem; line-height: 1.3; margin: 0 0 0.75rem; }
+    p { margin: 0; color: #425c52; }
+    header p { max-width: 65ch; }
+    .workspace { margin-top: 2.5rem; background: #f0f7f2; display: grid; }
+    section { padding: 2rem; min-width: 0; }
+    section + section { border-top: 1px solid #c4d6cb; }
+    .note { margin-top: 1.5rem; max-width: 65ch; }
+    :focus-visible { outline: 3px solid #005fcc; outline-offset: 4px; }
+    @media (min-width: 44rem) {
+      .workspace { grid-template-columns: 1fr 1fr; }
+      section + section { border-top: 0; border-left: 1px solid #c4d6cb; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Decide where or what to eat together. Create a poll, vote for your favorite option, and see the results.</p>
+    </header>
+    <div class="workspace">
+      <section aria-labelledby="create-heading">
+        <h2 id="create-heading">Create a poll</h2>
+        <p>Poll creation will appear here.</p>
+      </section>
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Poll results</h2>
+        <p>Results will appear here after teammates vote.</p>
+      </section>
+    </div>
+    <p class="note">This is the app scaffold. Poll creation and voting are not available yet.</p>
+  </main>
+</body>
+</html>
