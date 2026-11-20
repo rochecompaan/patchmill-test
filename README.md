@@ -18,6 +18,61 @@ patchmill triage --dry-run
 patchmill triage
 ```
 
+## Poll model
+
+The browser-independent module [`src/domain/poll.ts`](src/domain/poll.ts) exports
+`Poll`, `PollOption`, `Vote`, `OptionVoteCount`, and `countVotes(poll)`.
+See [GLOSSARY.md](GLOSSARY.md) for the shared terms.
+
+A poll stores its question, ordered options, and anonymous votes as
+JSON-compatible data:
+
+```json
+{
+  "id": "lunch",
+  "question": "What is for lunch?",
+  "options": [
+    { "id": "soup", "label": "Soup" },
+    { "id": "wrap", "label": "Wrap" }
+  ],
+  "votes": [{ "optionId": "wrap" }, { "optionId": "wrap" }]
+}
+```
+
+`countVotes(poll)` returns the following counts without changing the poll:
+
+```json
+[
+  { "optionId": "soup", "count": 0 },
+  { "optionId": "wrap", "count": 2 }
+]
+```
+
+Counts derive from votes, not stored totals. Each vote selects one stable
+option ID within its poll. Option IDs must be unique within that poll.
+An unknown option reference raises `RangeError`. Empty polls return `[]`.
+The module does not validate unknown JSON or freeze data at runtime.
+Forms, browser storage, and same-browser double-vote prevention belong to later
+issues. Anonymous vote records do not identify teammates.
+
+### Verify the model
+
+Use Node 24 to run the tests directly, without a TypeScript loader:
+
+```bash
+node --test tests/poll.test.mjs
+```
+
+Run the strict source check with the pinned TypeScript compiler:
+
+```bash
+npm exec --yes --package=typescript@5.9.3 -- tsc --noEmit --strict --target ES2022 --module NodeNext --moduleResolution NodeNext src/domain/poll.ts
+```
+
+The compiler command needs npm registry access or a cached compiler package.
+It does not add dependencies to the repository. No app build is necessary for
+this standalone module.
+
 ## Source of truth
 
 This repository is disposable. The reusable project brief and issue prompts live
