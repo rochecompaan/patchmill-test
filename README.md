@@ -38,6 +38,7 @@ Open the local URL that Vite prints in the terminal. Stop the server with Ctrl+C
 
 Blank or whitespace-only entries cannot save. Duplicate labels are allowed.
 The app keeps one poll in memory in the current tab. Reloading clears the poll and returns to an empty form.
+A nonempty, unsaved draft triggers the browser's leave-page warning. Canceling keeps the draft. A saved poll does not trigger this warning.
 Editing, replacement, voting, results, and browser storage are not available yet.
 
 ## Run checks

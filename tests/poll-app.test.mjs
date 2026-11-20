@@ -141,6 +141,35 @@ test('ignores stale submissions after save', t => {
   assert.deepEqual(labels(), ['Soup', 'Wrap']);
 });
 
+test('warns only for a nonempty unsaved draft', t => {
+  const { document, fill, submit } = app(t);
+  const window = document.defaultView;
+  const warns = () => {
+    const event = new window.Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(event);
+    return event.defaultPrevented;
+  };
+  assert.equal(warns(), false);
+  fill(['Lunch?', '', '']);
+  assert.equal(warns(), true);
+  fill(['', '', '']);
+  assert.equal(warns(), false);
+  fill(['', 'Soup', '']);
+  assert.equal(warns(), true);
+  fill(['Lunch?', 'Soup', 'Wrap']);
+  submit();
+  assert.equal(warns(), false);
+});
+
+test('preserves a long internal whitespace run while trimming its boundaries', t => {
+  const { root, fill, submit, labels } = app(t);
+  const text = `A${' '.repeat(65536)}B`;
+  fill([`\u0085  ${text}  \u0085`, `  ${text}  `, 'Wrap']);
+  submit();
+  assert.equal(root.querySelector('section h2').textContent, text);
+  assert.deepEqual(labels(), [text, 'Wrap']);
+});
+
 test('fresh mounts start empty', t => {
   const first = app(t);
   first.fill(['Lunch?', 'Soup', 'Wrap']);

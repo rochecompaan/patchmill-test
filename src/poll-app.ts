@@ -1,13 +1,27 @@
 import type { Poll } from './domain/poll';
 
+function trimWhitespace(value: string): string {
+  const whitespace = /[\s\p{White_Space}]/u;
+  let start = 0;
+  let end = value.length;
+  while (start < end && whitespace.test(value[start])) start++;
+  while (end > start && whitespace.test(value[end - 1])) end--;
+  return value.slice(start, end);
+}
+
 /** Mount once per workspace. Polls live only in this document's memory. */
 export function mountPollApp(root: HTMLElement): void {
   const document = root.ownerDocument;
+  const window = document.defaultView!;
   let currentPoll: Poll | null = null;
+  const warnBeforeUnload = (event: BeforeUnloadEvent): void => {
+    event.preventDefault();
+    event.returnValue = '';
+  };
   root.innerHTML = `
     <section aria-labelledby="create-heading">
       <h2 id="create-heading">Create a poll</h2>
-      <form novalidate>
+      <form novalidate autocomplete="off">
         <p>Enter a question and at least two lunch options.</p>
         <label for="poll-question">Poll question</label>
         <input id="poll-question" name="question" type="text" required>
@@ -73,8 +87,12 @@ export function mountPollApp(root: HTMLElement): void {
   });
 
   root.addEventListener('input', event => {
-    if (event.target instanceof document.defaultView!.HTMLInputElement) {
+    if (event.target instanceof window.HTMLInputElement && currentPoll === null) {
       event.target.setCustomValidity('');
+      // Only clearing a field needs a scan; ordinary keystrokes stay constant-time.
+      const hasDraft = event.target.value !== '' || [...form.querySelectorAll('input')].some(input => input.value !== '');
+      if (hasDraft) window.addEventListener('beforeunload', warnBeforeUnload);
+      else window.removeEventListener('beforeunload', warnBeforeUnload);
     }
   });
 
@@ -84,8 +102,7 @@ export function mountPollApp(root: HTMLElement): void {
     if (currentPoll !== null) return;
 
     const inputs = [...form.querySelectorAll('input')];
-    // Include Unicode NEXT LINE as whitespace, as well as ECMAScript trim characters.
-    const values = inputs.map(input => input.value.replace(/^[\s\p{White_Space}]+|[\s\p{White_Space}]+$/gu, ''));
+    const values = inputs.map(input => trimWhitespace(input.value));
     inputs.forEach((input, index) => {
       const message = index === 0 ? 'Enter a poll question.' : `Enter option ${index}.`;
       input.setCustomValidity(values[index] ? '' : message);
@@ -103,6 +120,7 @@ export function mountPollApp(root: HTMLElement): void {
       options: values.slice(1).map(label => ({ id: crypto.randomUUID(), label })),
       votes: [],
     };
+    window.removeEventListener('beforeunload', warnBeforeUnload);
     showPoll(currentPoll);
   });
 }

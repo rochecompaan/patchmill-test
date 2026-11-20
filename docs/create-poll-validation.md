@@ -18,9 +18,9 @@ The running app is the Vite production build, not the planning mockup.
 | --- | --- |
 | `npm ci` | Passed. Clean dependency installation. |
 | `node --test tests/poll.test.mjs` before implementation | Passed, 8 tests. |
-| `npm test` after the review fix pass | Passed, 36 tests: 28 form cases and 8 unchanged model cases. |
+| `npm test` after frontend repairs | Passed, 38 tests: 30 form cases and 8 unchanged model cases. |
 | Node 24.0.0 `npm ci --engine-strict` | Passed against the final jsdom 29 lockfile. |
-| Node 24.0.0 `node --test tests/*.test.mjs` | Passed, 36 tests at the declared Node floor. |
+| Node 24.0.0 `node --test tests/*.test.mjs` | Passed, 38 tests at the declared Node floor. |
 | `npm run check` | Passed, strict TypeScript. |
 | `npm run build` | Passed, Vite production bundle. |
 | `git diff --check` | Passed. |
@@ -44,7 +44,12 @@ All browser assertions passed. The implementation author also inspected the four
 - The native validation popup appeared beside the question field. Popup appearance is browser-controlled.
 - Editing clears custom validity. A corrected submission succeeds.
 - With two invalid fields, the question receives focus first. After question correction, Option 2 receives focus.
-- Reload clears the poll and restores the empty form. The note explains this limitation.
+- Reload clears a saved poll and restores the empty form. The note explains this limitation.
+- A nonempty, unsaved draft triggers the native leave-page warning after user interaction.
+  Canceling preserves its values. Accepting reload resets it. Clean, cleared, and saved states do not warn.
+- Add option activates with Space and Enter as well as pointer clicks.
+- Both buttons have visible hover feedback, manipulation touch behavior, and an intentional blue tap highlight.
+- The form disables autocomplete for its non-authentication fields.
 - Duplicate Unicode labels remain separate entries. HTML-like question and option text appears literally without injected elements.
 - A rendered-spacing check distinguishes `A  B` from `A B` in saved labels and the question.
   Before the fix, both labels measured 24.91 pixels. After the fix, the double-space label measured 29.36 pixels.
@@ -98,7 +103,7 @@ The review found three Important issues and one Minor issue.
   Four new regression cases failed before boundary trimming included Unicode `White_Space`. All 36 cases then passed.
 
 The app was rebuilt before browser rechecks. All four screenshots were refreshed from the corrected build.
-No second normal review was required for this one fix pass. The separate frontend review follows it.
+No second normal review was required for this one fix pass. A separate frontend review then found the repair items listed next.
 
 ### Rulings and deferred findings
 
@@ -114,6 +119,26 @@ No second normal review was required for this one fix pass. The separate fronten
   Cost if wrong: a format-only label can look empty despite satisfying the current text policy.
 
 No Minor findings remain deferred from this review.
+
+## Frontend review and repairs
+
+The fresh-context frontend reviewer used `openai-codex/gpt-6.2-sol` with high thinking against committed head `2640f83`.
+The reviewer inspected all four screenshots and the pinned local interface guidelines.
+
+- Accepted Important: the extended trim regex retried across internal whitespace, violating the linear-time design.
+  A 65,536-space pasted question took 2,464 ms before repair and 4 ms after it in a jsdom submit probe.
+  Boundary scans now trim only the ends and preserve internal text. A maintained long-text behavior test covers this input.
+- Accepted Important: protect a nonempty unsaved draft with a native unload warning.
+  The new unload behavior test failed before repair and passed after it. Chromium confirmed cancel/accept behavior and clean/saved exclusions.
+- Accepted Minor: disable autocomplete on the poll form, including appended inputs.
+- Accepted Minor: add visible palette-consistent hover states without changing keyboard focus.
+- Accepted Minor: define manipulation touch behavior and a visible tap highlight without disabling pinch zoom.
+
+These changes do not persist drafts or saved polls. The unload warning applies only to a nonempty, unsaved draft.
+Clearing a field checks whether any other field retains a draft. Ordinary nonempty keystrokes do not scan all options.
+The rebuilt app passed the interaction, layout, native zoom, and spacing checks again. Screenshots were refreshed from that build.
+A fresh normal review of the production repair range and a fresh frontend pass are required before PR readiness.
+Their exact reviewed heads and outcomes belong in the implementation PR body.
 
 ## Human Reviewer Callouts (Non-Blocking)
 

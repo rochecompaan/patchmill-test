@@ -113,6 +113,16 @@ section + section {
   background: #fff;
   color: #18352c;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 95, 204, 0.3);
+}
+
+.workspace button:hover {
+  background: #c4d6cb;
+}
+
+.workspace .primary:hover {
+  background: #425c52;
 }
 
 .workspace .primary {
