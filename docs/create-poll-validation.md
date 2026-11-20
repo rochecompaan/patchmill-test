@@ -137,7 +137,12 @@ The reviewer inspected all four screenshots and the pinned local interface guide
 These changes do not persist drafts or saved polls. The unload warning applies only to a nonempty, unsaved draft.
 Clearing a field checks whether any other field retains a draft. Ordinary nonempty keystrokes do not scan all options.
 The rebuilt app passed the interaction, layout, native zoom, and spacing checks again. Screenshots were refreshed from that build.
-A fresh normal review of the production repair range and a fresh frontend pass are required before PR readiness.
+The fresh normal review of `2640f83..801820f` found no Critical or Important defects.
+A second frontend review of `801820f` accepted those repairs but found that the Save poll hover fill reduced its prominence.
+That Minor finding was accepted. The revised dark-green hover raises white-label contrast from 13.25:1 at rest to 15.77:1.
+The browser contrast assertion failed against the previous build and passed after the correction.
+Project checks, native interaction checks, and screenshot captures ran again against the rebuilt app.
+A fresh normal review of this final styling repair and a fresh frontend pass are required before PR readiness.
 Their exact reviewed heads and outcomes belong in the implementation PR body.
 
 ## Human Reviewer Callouts (Non-Blocking)
