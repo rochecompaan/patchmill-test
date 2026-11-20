@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Issue #6 — Persist polls locally mockup</title>
+<style>
+:root{font-family:"Trebuchet MS",Arial,sans-serif;color:#18352c;background:#fff;line-height:1.6}*{box-sizing:border-box}body{margin:0}main{max-width:62.5rem;margin:auto;padding:3.5rem 1.25rem}header{border-top:.4rem solid #18352c;padding-top:1.5rem}h1{font-size:2.5rem;line-height:1.15;margin:0 0 1rem}h2{font-size:1.25rem;margin:0 0 .75rem}p{color:#425c52;margin:0 0 1rem}header p{max-width:48ch}.workspace{margin-top:2.5rem;background:#f0f7f2;display:grid}section{padding:2rem;min-width:0}section+section{border-top:1px solid #c4d6cb}button{font:inherit;border:1px solid #18352c;padding:.6rem 1rem;background:#fff;color:#18352c;cursor:pointer;max-width:100%;white-space:normal}button.primary{background:#18352c;color:white}.actions{display:flex;flex-wrap:wrap;gap:.75rem}#reset-area{margin-top:1.5rem}#confirmation{border-left:.25rem solid #18352c;padding:1rem;margin-top:1rem;background:#f0f7f2}#status{margin-top:1.25rem;max-width:65ch}#status:empty{margin:0}.tools{border-top:1px solid #c4d6cb;margin-top:3rem;padding-top:1rem}li{margin-bottom:.5rem}h1,h2,p,li{overflow-wrap:anywhere}:focus-visible{outline:3px solid #005fcc;outline-offset:4px}[hidden]{display:none!important}@media(min-width:44rem){.workspace{grid-template-columns:1fr 1fr}section+section{border-top:0;border-left:1px solid #c4d6cb}}
+</style>
+</head>
+<body><main>
+<header><h1>Team Lunch Poll</h1><p>Decide where or what to eat together. Create a poll, vote for your favorite option, and see the results.</p></header>
+<div class="workspace" id="poll"><section aria-labelledby="poll-heading"><h2 id="poll-heading">Soup or wraps?</h2><p>Current poll restored in this browser.</p><ul><li>Soup</li><li>Wrap</li></ul></section><section aria-labelledby="results-heading"><h2 id="results-heading">Poll results</h2><ul><li>Soup: 0 votes</li><li>Wrap: 2 votes</li></ul></section></div>
+<div class="workspace" id="empty" hidden><section><h2 id="create-heading" tabindex="-1">Create a poll</h2><p>Create a lunch poll with a question and at least two options.</p><p>The existing create-poll form belongs here.</p></section><section><h2>Poll results</h2><p>Results will appear here after teammates vote.</p></section></div>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="reset-area"><button id="reset" type="button" aria-expanded="false" aria-controls="confirmation">Reset poll</button><div id="confirmation" role="group" aria-labelledby="confirm-heading" hidden><p id="confirm-heading">Reset this poll and all votes?</p><div class="actions"><button id="keep" type="button">Keep poll</button><button class="primary" id="confirm" type="button">Reset poll and votes</button></div></div></div>
+<aside class="tools" aria-label="Mockup controls"><h2>Planning preview</h2><p>Issue #6. This mockup illustrates reset and feedback, not a new poll or results design. It does not access browser storage.</p><p>Governing documents: <a href="../specs/2026-11-20-issue-6-persist-polls-locally-design.md">Persist polls locally design</a> and <a href="../plans/2026-11-20-issue-6-persist-polls-locally-plan.md">Persist Polls Locally Implementation Plan</a>.</p><div class="actions"><button id="restore" type="button">Preview restored poll</button><button id="warn" type="button">Preview storage warning</button><button id="invalid" type="button">Preview invalid saved data</button><button id="failure" type="button" aria-pressed="false">Simulate reset error: off</button></div></aside>
+</main><script>
+const el=id=>document.getElementById(id);let fail=false;
+function cancel(){el('confirmation').hidden=true;el('reset').setAttribute('aria-expanded','false');el('reset').focus()}
+el('reset').onclick=()=>{el('confirmation').hidden=false;el('reset').setAttribute('aria-expanded','true');el('keep').focus()};
+el('keep').onclick=cancel;el('confirmation').onkeydown=e=>{if(e.key==='Escape')cancel()};
+el('confirm').onclick=()=>{if(fail){el('status').textContent='The poll could not be reset. Browser storage is unavailable. Try again.';return}el('poll').hidden=true;el('empty').hidden=false;el('reset-area').hidden=true;el('confirmation').hidden=true;el('status').textContent='Poll reset. Create a new poll.';el('create-heading').focus()};
+el('restore').onclick=()=>{el('poll').hidden=false;el('empty').hidden=true;el('reset-area').hidden=false;el('confirmation').hidden=true;el('reset').setAttribute('aria-expanded','false');el('status').textContent=''};
+el('warn').onclick=()=>{el('status').textContent='Browser storage is unavailable. Changes may be lost after refresh.'};
+el('invalid').onclick=()=>{el('poll').hidden=true;el('empty').hidden=false;el('reset-area').hidden=true;el('status').textContent='Saved poll data could not be loaded. Create a new poll to start over.'};
+el('failure').onclick=()=>{fail=!fail;el('failure').setAttribute('aria-pressed',String(fail));el('failure').textContent='Simulate reset error: '+(fail?'on':'off')};
+</script></body></html>
