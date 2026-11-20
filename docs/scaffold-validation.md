@@ -9,7 +9,7 @@ The original repository had no package or test suite, so no baseline tests exist
 - `npm ci`: passed from the repository root with the committed dependency versions.
 - `npm run check`: passed with strict TypeScript and no output files.
 - `npm run build`: passed. Vite produced `dist/index.html` and bundled CSS and JavaScript.
-- `npm audit`: the installation reported zero vulnerabilities.
+- Install-time audit: `npm install` and `npm ci` reported zero vulnerabilities.
 - `git diff --check`: passed before the implementation commit.
 
 A temporary assignment, `const typeProbe: number = 'not a number'`, made `npm run check` exit 1 with TS2322.
@@ -29,10 +29,13 @@ An initial browser check exposed Chromium's implicit request for a missing favic
 The document now specifies an empty data favicon to avoid that unnecessary request without adding a demo icon.
 The same browser check then passed.
 
-Native browser zoom used `chrome.tabs.setZoom` in an isolated temporary verification profile.
+Native browser zoom used `chrome.tabs.setZoom` in an isolated temporary verification profile on both development and preview URLs.
 At 200% zoom, a 1440px outer window had a 720px inner viewport and a device-pixel ratio of 2.
 The document width remained 720px. All content remained readable without clipping or horizontal overflow.
 The temporary browser extension and profile are not application files or project dependencies.
+The first zoom screenshot used an incorrect capture size and showed only part of the browser surface.
+Review caught that evidence error. A new CDP capture uses physical surface dimensions and shows the full description, both placeholders, and scope note.
+The corrected 1440×996 screenshot confirms that all content remains visible at native 200% zoom.
 
 The primary and secondary text colors exceed WCAG AA contrast on their backgrounds.
 The lower text contrast is approximately 6.69:1 (secondary ink on the workspace).
