@@ -30,10 +30,27 @@ npm run dev
 
 Open the local URL that Vite prints in the terminal. Stop the server with Ctrl+C.
 
-The current app is a static scaffold with placeholders for poll creation and results.
-Poll creation, voting, and data storage are not available yet.
+### Create a poll
+
+1. Enter a poll question and two lunch options.
+2. To include more options, select **Add option**. Each new field is required.
+3. Select **Save poll**. The form becomes the saved question and its ordered options.
+
+Blank or whitespace-only entries cannot save. Duplicate labels are allowed.
+The app keeps one poll in memory in the current tab. Reloading clears the poll and returns to an empty form.
+A nonempty, unsaved draft triggers the browser's leave-page warning. Canceling keeps the draft. A saved poll does not trigger this warning.
+Editing, replacement, voting, results, and browser storage are not available yet.
 
 ## Run checks
+
+Run the model and DOM behavior tests with Node 24:
+
+```bash
+npm test
+```
+
+The DOM suite uses jsdom to exercise the production form module.
+Real-browser keyboard, validation, and layout observations are in [the validation record](docs/create-poll-validation.md).
 
 Run the strict TypeScript check:
 
@@ -48,7 +65,7 @@ npm run build
 ```
 
 The build runs the type check first, then writes the production assets to `dist/`.
-Checks currently cover type checking and production bundling. There is no automated behavior suite yet.
+Checks cover model and form behavior, strict types, and production bundling.
 
 After a successful build, inspect the production app locally:
 
@@ -102,8 +119,8 @@ Counts derive from votes, not stored totals. Each vote selects one stable
 option ID within its poll. Option IDs must be unique within that poll.
 An unknown option reference raises `RangeError`. Empty polls return `[]`.
 The module does not validate unknown JSON or freeze data at runtime.
-Forms, browser storage, and same-browser double-vote prevention belong to later
-issues. Anonymous vote records do not identify teammates.
+The creation form uses this model with an empty votes array. Browser storage and same-browser double-vote prevention belong to later issues.
+Anonymous vote records do not identify teammates.
 
 ### Verify the model
 
