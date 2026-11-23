@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll mockup · Issue #1</title>
+  <!-- Design: ../specs/2026-11-23-issue-1-create-the-team-lunch-poll-app-scaffold-design.md -->
+  <style>
+    :root {
+      --plum: #3d2452;
+      --lilac: #f2edf8;
+      --mint: #e5f5eb;
+      --ink: #20352c;
+      --rule: #49695a;
+      --paper: #fffafc;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--lilac); color: var(--ink); font: 1rem/1.55 system-ui, sans-serif; }
+    main { width: min(calc(100% - 2rem), 58rem); margin: clamp(1rem, 7vw, 5rem) auto; }
+    header { background: var(--plum); color: var(--paper); padding: clamp(1.25rem, 5vw, 4rem); border-radius: 2rem 2rem .5rem .5rem; }
+    h1 { margin: 0 0 .75rem; font: bold clamp(2.25rem, 8vw, 5rem)/1 Georgia, serif; }
+    h2, h3 { line-height: 1.2; margin: 0 0 .5rem; }
+    p { margin: 0; max-width: 45ch; }
+    section { margin-top: .75rem; padding: clamp(1.25rem, 5vw, 4rem); background: var(--mint); border-radius: .5rem .5rem 2rem 2rem; }
+    .notices { display: grid; gap: 1rem; margin-top: 1.25rem; }
+    .notice { border-top: 2px dashed var(--rule); padding-top: .75rem; }
+    :focus-visible { outline: 3px solid var(--rule); outline-offset: 3px; }
+    @media (min-width: 40rem) {
+      .notices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Help your team decide where or what to eat for lunch.</p>
+    </header>
+    <section aria-labelledby="workspace-heading">
+      <h2 id="workspace-heading">Poll workspace</h2>
+      <div class="notices">
+        <div class="notice">
+          <h3>Create a poll</h3>
+          <p>Poll creation will appear here.</p>
+        </div>
+        <div class="notice">
+          <h3>Results</h3>
+          <p>Voting results will appear here.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

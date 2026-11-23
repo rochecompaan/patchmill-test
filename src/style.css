@@ -1,0 +1,79 @@
+:root {
+  --plum: #3d2452;
+  --lilac: #f2edf8;
+  --mint: #e5f5eb;
+  --ink: #20352c;
+  --rule: #49695a;
+  --paper: #fffafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--lilac);
+  color: var(--ink);
+  font: 1rem/1.55 system-ui, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+main {
+  width: min(calc(100% - 2rem), 58rem);
+  margin: clamp(1rem, 7vw, 5rem) auto;
+}
+
+header {
+  padding: clamp(1.25rem, 5vw, 4rem);
+  border-radius: 2rem 2rem .5rem .5rem;
+  background: var(--plum);
+  color: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+h1 {
+  margin: 0 0 .75rem;
+  font: bold clamp(2.25rem, 8vw, 5rem)/1 Georgia, serif;
+}
+
+h2,
+h3 {
+  margin: 0 0 .5rem;
+  line-height: 1.2;
+}
+
+p {
+  max-width: 45ch;
+  margin: 0;
+}
+
+section {
+  margin-top: .75rem;
+  padding: clamp(1.25rem, 5vw, 4rem);
+  border-radius: .5rem .5rem 2rem 2rem;
+  background: var(--mint);
+}
+
+.notices {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.notice {
+  padding-top: .75rem;
+  border-top: 2px dashed var(--rule);
+}
+
+@media (min-width: 40rem) {
+  .notices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
