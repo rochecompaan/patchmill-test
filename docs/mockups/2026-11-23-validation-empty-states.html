@@ -1,0 +1,149 @@
+<!doctype html>
+<!-- Companion to 2026-11-23-issue-7-add-validation-empty-states-and-error-states-design.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Lunch Poll — First use and validation, Issue #7</title>
+<style>
+  :root { --plum: #3d2452; --lilac: #f2edf8; --mint: #e5f5eb; --ink: #20352c; --rule: #49695a; --paper: #fffafc; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--lilac); color: var(--ink); font: 1rem/1.55 system-ui, sans-serif; overflow-wrap: anywhere; }
+  main { width: min(calc(100% - 2rem), 58rem); margin: clamp(1rem, 7vw, 5rem) auto; }
+  header, section { padding: clamp(1.25rem, 5vw, 4rem); }
+  header { border-radius: 2rem 2rem .5rem .5rem; background: var(--plum); color: var(--paper); }
+  h1 { margin: 0 0 .75rem; font: bold clamp(2.25rem, 8vw, 5rem)/1 Georgia, serif; }
+  h2, h3 { margin: 0 0 .5rem; line-height: 1.2; }
+  p { margin: 0; max-width: 45ch; }
+  section { margin-top: .75rem; border-radius: .5rem .5rem 2rem 2rem; background: var(--mint); }
+  .notices { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  .notice { padding-top: .75rem; border-top: 2px dashed var(--rule); min-width: 0; }
+  fieldset { min-width: 0; margin: .9rem 0 0; padding: 0; border: 0; }
+  legend { padding: 0; }
+  label, legend { font-weight: 650; }
+  .field { margin-top: .65rem; }
+  input, button { font: inherit; padding: .5rem .7rem; border: 1px solid var(--rule); border-radius: .35rem; color: var(--ink); }
+  input { display: block; width: 100%; min-width: 0; background: var(--paper); }
+  button { min-height: 2.75rem; background: transparent; cursor: pointer; font-weight: 650; }
+  .remove { margin-top: .45rem; }
+  button[type="submit"] { background: var(--plum); color: var(--paper); border-color: var(--plum); }
+  :is(input, button, h3):focus { outline: 3px solid var(--plum); outline-offset: 3px; }
+  input[aria-invalid="true"] { border-color: var(--plum); }
+  #poll-error:not(:empty) { margin-top: .65rem; color: var(--plum); font-weight: 700; }
+  .actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .9rem; }
+  @media (min-width: 40rem) { .notices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; } }
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Team Lunch Poll</h1><p>Help your team decide where or what to eat for lunch.</p></header>
+  <section aria-labelledby="workspace-heading">
+    <h2 id="workspace-heading">Poll workspace</h2>
+    <div class="notices">
+      <div class="notice" id="creation">
+        <h3>No lunch poll yet</h3>
+        <p>Enter a question and at least two lunch options to create your first poll.</p>
+        <form autocomplete="off" novalidate>
+          <div class="field"><label for="poll-question">Poll question</label><input id="poll-question" type="text" disabled></div>
+          <p id="poll-error" role="alert"></p>
+          <fieldset aria-describedby="options-hint">
+            <legend>Lunch options</legend>
+            <p id="options-hint">Enter at least two lunch options. You can remove extra options.</p>
+            <div id="option-fields">
+              <div class="field"><label for="option-1">Option 1</label><input id="option-1" type="text" disabled></div>
+              <div class="field"><label for="option-2">Option 2</label><input id="option-2" type="text" disabled></div>
+            </div>
+          </fieldset>
+          <div class="actions"><button type="button" id="add-option" disabled>Add option</button><button type="submit" disabled>Save poll</button></div>
+        </form>
+      </div>
+      <div class="notice"><h3>Results</h3><p>Voting results will appear here.</p></div>
+    </div>
+  </section>
+</main>
+<script>
+  const creation = document.querySelector('#creation');
+  const form = creation.querySelector('form');
+  const question = form.querySelector('#poll-question');
+  const fields = form.querySelector('#option-fields');
+  const add = form.querySelector('#add-option');
+  const error = form.querySelector('#poll-error');
+  let nextNumber = 3;
+  let invalid;
+  function resetError() {
+    invalid?.removeAttribute('aria-invalid');
+    invalid?.removeAttribute('aria-describedby');
+    invalid = undefined;
+    error.textContent = '';
+    question.parentElement.after(error);
+  }
+  function showError(input, message) {
+    invalid = input;
+    input.after(error);
+    error.textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', error.id);
+    input.focus({ preventScroll: true });
+    const messageBox = error.getBoundingClientRect();
+    const inputBox = input.getBoundingClientRect();
+    const labelBox = input.labels[0].getBoundingClientRect();
+    const inputTop = Math.min(inputBox.top, messageBox.top);
+    const inputBottom = Math.max(inputBox.bottom, messageBox.bottom);
+    for (const [top, bottom] of [
+      [Math.min(labelBox.top, inputTop), Math.max(labelBox.bottom, inputBottom)],
+      [inputTop, inputBottom],
+    ]) {
+      if (bottom - top > innerHeight) continue;
+      if (top < 8 || bottom > innerHeight - 8) scrollBy(0, (top + bottom - innerHeight) / 2);
+      return;
+    }
+    input.scrollIntoView({ block: 'nearest' });
+  }
+  add.addEventListener('click', () => {
+    const number = nextNumber++;
+    const row = document.createElement('div');
+    row.className = 'field';
+    const input = document.createElement('input');
+    input.id = `option-${number}`;
+    input.type = 'text';
+    const label = document.createElement('label');
+    label.htmlFor = input.id;
+    label.textContent = `Option ${number}`;
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'remove';
+    remove.textContent = 'Remove option';
+    remove.setAttribute('aria-label', `Remove option ${number}`);
+    remove.addEventListener('click', () => {
+      resetError();
+      row.remove();
+      add.focus();
+    });
+    row.append(label, input, remove);
+    fields.append(row);
+    input.focus();
+  });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    resetError();
+    const options = [...fields.querySelectorAll('input')];
+    const blank = options.find((input) => !input.value.trim());
+    if (!question.value.trim()) return showError(question, 'Enter a poll question.');
+    if (options.filter((input) => input.value.trim()).length < 2) return showError(blank, 'Enter at least two lunch options.');
+    if (blank) return showError(blank, blank.parentElement.querySelector('button') ? 'Enter a lunch option or remove this field.' : 'Enter a lunch option.');
+    const heading = document.createElement('h3');
+    heading.textContent = question.value.trim();
+    heading.tabIndex = -1;
+    const list = document.createElement('ul');
+    options.forEach((input) => {
+      const item = document.createElement('li');
+      item.textContent = input.value.trim();
+      list.append(item);
+    });
+    creation.replaceChildren(heading, list);
+    heading.focus();
+  });
+  form.querySelectorAll(':disabled').forEach((control) => { control.disabled = false; });
+</script>
+</body>
+</html>
