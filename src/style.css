@@ -16,6 +16,7 @@ body {
   background: var(--lilac);
   color: var(--ink);
   font: 1rem/1.55 system-ui, sans-serif;
+  overflow-wrap: anywhere;
 }
 
 main {
@@ -28,6 +29,12 @@ header {
   border-radius: 2rem 2rem .5rem .5rem;
   background: var(--plum);
   color: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 h1 {
