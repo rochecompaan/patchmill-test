@@ -18,6 +18,24 @@ export interface OptionVoteCount {
   readonly count: number;
 }
 
+export type CreatePollResult =
+  | { ok: true; poll: Poll }
+  | { ok: false; reason: 'question-required' | 'options-required' };
+
+export function createPoll(question: string, optionLabels: readonly string[]): CreatePollResult {
+  const trimmedQuestion = question.trim();
+  if (!trimmedQuestion) return { ok: false, reason: 'question-required' };
+
+  const options: PollOption[] = [];
+  for (const input of optionLabels) {
+    const label = input.trim();
+    if (label) options.push({ id: `option-${options.length + 1}`, label });
+  }
+  if (options.length < 2) return { ok: false, reason: 'options-required' };
+
+  return { ok: true, poll: { question: trimmedQuestion, options, votes: [] } };
+}
+
 export function countVotes(poll: Poll): readonly OptionVoteCount[] {
   const counts = new Map<string, number>();
   for (const { id } of poll.options) {
