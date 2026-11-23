@@ -117,7 +117,6 @@
   | Enter `<i>Tacos</i>` in Option 3 and `Pizza` in Option 4. Select Save poll. | The heading shows literal `<b>Lunch?</b>` text. The list shows `Pizza`, literal `<i>Tacos</i>`, and `Pizza` in order. Results is unchanged. |
 
 - [ ] **Commit.** Run `git diff --check`. Expected: no whitespace errors. Run `git add index.html src/main.ts src/style.css README.md && git commit -m "feat: add the create poll form"`. Expected: a commit with the form and its run instructions.
-
 ## Planning review
 
 Combined scope: this plan, the [specification](../specs/2026-11-23-issue-3-build-the-create-poll-form-design.md), their inline visuals, and the linked mockup.

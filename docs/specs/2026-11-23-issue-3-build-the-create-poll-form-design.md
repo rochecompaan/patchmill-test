@@ -63,7 +63,6 @@ Create a poll form ── Add option ──→ Same form + one focused field
 ## Companion artifacts
 
 - `docs/mockups/2026-11-23-create-poll-form.html`: [Full-page mockup](../mockups/2026-11-23-create-poll-form.html).
-
 ## Planning review
 
 Combined scope: this specification, the [plan](../plans/2026-11-23-issue-3-build-the-create-poll-form-plan.md), their inline visuals, and the linked mockup.
