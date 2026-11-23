@@ -23,6 +23,7 @@
                 <label for="poll-question">Poll question</label>
                 <input id="poll-question" name="question" type="text" disabled>
               </div>
+              <p id="poll-error" role="alert"></p>
               <fieldset aria-describedby="options-hint">
                 <legend>Lunch options</legend>
                 <p id="options-hint">Enter at least two lunch options.</p>
@@ -37,7 +38,6 @@
                   </div>
                 </div>
               </fieldset>
-              <p id="poll-error" role="alert"></p>
               <div class="actions">
                 <button id="add-option" type="button" disabled>Add option</button>
                 <button type="submit" disabled>Save poll</button>
