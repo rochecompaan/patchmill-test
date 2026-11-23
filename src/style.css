@@ -204,6 +204,10 @@ section {
   outline-offset: 3px;
 }
 
+.saved-poll .vote-row button {
+  touch-action: manipulation;
+}
+
 #creation.saved-poll button:enabled {
   color: var(--paper);
   background: var(--plum);
