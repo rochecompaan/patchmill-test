@@ -26,18 +26,22 @@ function showError(input: HTMLInputElement, message: string) {
 }
 
 function revealError(input: HTMLInputElement) {
-  const field = input.closest('.field')!.getBoundingClientRect();
   const message = error.getBoundingClientRect();
-  const top = Math.min(field.top, message.top);
-  const bottom = Math.max(field.bottom, message.bottom);
   const height = window.innerHeight;
+  const row = input.closest('.field')!;
 
-  if (bottom - top > height) {
-    input.scrollIntoView({ block: 'nearest' });
-  } else if (top < 8 || bottom > height - 8) {
-    // Center the label, input, and message together, leaving room for the focus ring.
-    window.scrollBy(0, (top + bottom - height) / 2);
+  // Prefer the labeled row, but prioritize the input and message in short viewports.
+  for (const element of [row, input]) {
+    const field = element.getBoundingClientRect();
+    const top = Math.min(field.top, message.top);
+    const bottom = Math.max(field.bottom, message.bottom);
+    if (bottom - top > height) continue;
+    if (top < 8 || bottom > height - 8) {
+      window.scrollBy(0, (top + bottom - height) / 2);
+    }
+    return;
   }
+  input.scrollIntoView({ block: 'nearest' });
 }
 
 function warnAboutDraft(event: BeforeUnloadEvent) {
