@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2edf8">
+  <title>Team Lunch Poll</title>
+  <!-- Issue #3: 2026-11-23-issue-3-build-the-create-poll-form-design.md -->
+  <style>
+    :root { --plum: #3d2452; --lilac: #f2edf8; --mint: #e5f5eb; --ink: #20352c; --rule: #49695a; --paper: #fffafc; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--lilac); color: var(--ink); font: 1rem/1.55 system-ui, sans-serif; overflow-wrap: anywhere; }
+    main { width: min(calc(100% - 2rem), 58rem); margin: clamp(1rem, 7vw, 5rem) auto; }
+    header { padding: clamp(1.25rem, 5vw, 4rem); border-radius: 2rem 2rem .5rem .5rem; background: var(--plum); color: var(--paper); }
+    h1, h2, h3 { text-wrap: balance; }
+    h1 { margin: 0 0 .75rem; font: bold clamp(2.25rem, 8vw, 5rem)/1 Georgia, serif; }
+    h2, h3 { margin: 0 0 .5rem; line-height: 1.2; }
+    p { max-width: 45ch; margin: 0; }
+    section { margin-top: .75rem; padding: clamp(1.25rem, 5vw, 4rem); border-radius: .5rem .5rem 2rem 2rem; background: var(--mint); }
+    .notices { display: grid; gap: 1rem; margin-top: 1.25rem; }
+    .notice { padding-top: .75rem; border-top: 2px dashed var(--rule); min-width: 0; }
+    @media (min-width: 40rem) { .notices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; } }
+    .field { margin-top: .65rem; }
+    label, legend { font-weight: 650; }
+    input, button { font: inherit; border: 1px solid var(--rule); border-radius: .35rem; padding: .5rem .7rem; }
+    input { display: block; min-width: 0; width: 100%; background: var(--paper); color: var(--ink); }
+    fieldset { min-width: 0; margin: .9rem 0 0; padding: 0; border: 0; }
+    legend { padding: 0; }
+    .actions { margin-top: .9rem; display: flex; flex-wrap: wrap; gap: .65rem; }
+    button { min-height: 2.75rem; color: var(--ink); background: transparent; font-weight: 650; cursor: pointer; }
+    button[type="submit"] { color: var(--paper); background: var(--plum); border-color: var(--plum); }
+    :is(input, button, h3):focus { outline: 3px solid var(--plum); outline-offset: 3px; }
+    [aria-invalid="true"] { border-color: var(--plum); }
+    #poll-error:not(:empty) { margin-top: .65rem; color: var(--plum); font-weight: 700; }
+    ul { margin: .65rem 0 0; padding-inline-start: 1.5rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Help your team decide where or what to eat for lunch.</p>
+    </header>
+    <section aria-labelledby="workspace-heading">
+      <h2 id="workspace-heading">Poll workspace</h2>
+      <div class="notices">
+        <div class="notice" id="creation">
+          <h3>Create a poll</h3>
+          <form id="create-poll-form" novalidate>
+            <div class="field">
+              <label for="poll-question">Poll question</label>
+              <input id="poll-question" name="question" type="text" disabled>
+            </div>
+            <fieldset aria-describedby="options-hint">
+              <legend>Lunch options</legend>
+              <p id="options-hint">Enter at least two lunch options.</p>
+              <div id="option-fields">
+                <div class="field"><label for="option-1">Option 1</label><input id="option-1" name="option" type="text" disabled></div>
+                <div class="field"><label for="option-2">Option 2</label><input id="option-2" name="option" type="text" disabled></div>
+              </div>
+            </fieldset>
+            <p id="poll-error" role="alert"></p>
+            <div class="actions">
+              <button id="add-option" type="button" disabled>Add option</button>
+              <button type="submit" disabled>Save poll</button>
+            </div>
+          </form>
+        </div>
+        <div class="notice">
+          <h3>Results</h3>
+          <p>Voting results will appear here.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector('#create-poll-form');
+    const question = document.querySelector('#poll-question');
+    const fields = document.querySelector('#option-fields');
+    const error = document.querySelector('#poll-error');
+    let invalidInput;
+    document.querySelector('#add-option').addEventListener('click', () => {
+      const number = fields.children.length + 1;
+      const row = document.createElement('div');
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      row.className = 'field';
+      input.type = 'text';
+      input.name = 'option';
+      input.id = `option-${number}`;
+      label.htmlFor = input.id;
+      label.textContent = `Option ${number}`;
+      row.append(label, input);
+      fields.append(row);
+      input.focus();
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      invalidInput?.removeAttribute('aria-invalid');
+      invalidInput?.removeAttribute('aria-describedby');
+      error.textContent = '';
+      const inputs = [...fields.querySelectorAll('input')];
+      const labels = inputs.map(input => input.value.trim()).filter(Boolean);
+      const text = question.value.trim();
+      invalidInput = !text ? question : labels.length < 2 ? inputs.find(input => !input.value.trim()) : undefined;
+      if (invalidInput) {
+        error.textContent = !text ? 'Enter a poll question.' : 'Enter at least two lunch options.';
+        invalidInput.setAttribute('aria-invalid', 'true');
+        invalidInput.setAttribute('aria-describedby', 'poll-error');
+        invalidInput.focus();
+        return;
+      }
+      const heading = document.createElement('h3');
+      const list = document.createElement('ul');
+      heading.textContent = text;
+      heading.tabIndex = -1;
+      for (const label of labels) {
+        const item = document.createElement('li');
+        item.textContent = label;
+        list.append(item);
+      }
+      document.querySelector('#creation').replaceChildren(heading, list);
+      heading.focus();
+    });
+    for (const control of form.querySelectorAll('input, button')) control.disabled = false;
+  </script>
+</body>
+</html>
