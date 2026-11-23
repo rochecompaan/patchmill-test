@@ -14,6 +14,7 @@ function showError(input: HTMLInputElement, message: string) {
   const description = input.getAttribute('aria-describedby');
   input.setAttribute('aria-describedby', description ? `${description} ${error.id}` : error.id);
   input.setAttribute('aria-invalid', 'true');
+  if (input.nextElementSibling !== error) input.after(error);
   error.textContent = message;
   input.focus({ preventScroll: true });
   revealError(input);
