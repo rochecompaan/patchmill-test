@@ -59,7 +59,6 @@ Save poll → Question + one Vote action per option
 ## Companion artifacts
 
 - `docs/mockups/2026-11-23-add-the-option-voting-flow.html`: [Interactive saved poll mockup](../mockups/2026-11-23-add-the-option-voting-flow.html).
-
 ## Planning review
 
 Combined scope: this design, the [plan](../plans/2026-11-23-issue-4-add-the-option-voting-flow-plan.md), their inline visuals, and the linked mockup. Both passes used `reviewer`, `openai-codex/gpt-6.2-sol`, thinking `xhigh`. Base: `2a130db24effd3b2c812ec2b082a817e07a721e1`.

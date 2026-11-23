@@ -100,7 +100,6 @@ test('rejects an unknown option without changing the input', () => {
 2  main.ts + style.css      → saved view, per-view guard, confirmation
    README + screenshots     → usage and browser evidence after checks
 ```
-
 ## Planning review
 
 Combined scope: this plan, the [design](../specs/2026-11-23-issue-4-add-the-option-voting-flow-design.md), their inline visuals, and the linked mockup. Both passes used `reviewer`, `openai-codex/gpt-6.2-sol`, thinking `xhigh`. Base: `2a130db24effd3b2c812ec2b082a817e07a721e1`.
