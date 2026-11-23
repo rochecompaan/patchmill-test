@@ -26,15 +26,18 @@ function showError(input: HTMLInputElement, message: string) {
 }
 
 function revealError(input: HTMLInputElement) {
-  const field = input.getBoundingClientRect();
+  const field = input.closest('.field')!.getBoundingClientRect();
   const message = error.getBoundingClientRect();
-  const top = Math.floor(Math.min(field.top, message.top));
-  const bottom = Math.ceil(Math.max(field.bottom, message.bottom));
+  const top = Math.min(field.top, message.top);
+  const bottom = Math.max(field.bottom, message.bottom);
   const height = window.innerHeight;
 
-  if (bottom - top > height) input.scrollIntoView({ block: 'nearest' });
-  else if (top < 0) window.scrollBy(0, top);
-  else if (bottom > height) window.scrollBy(0, bottom - height);
+  if (bottom - top > height) {
+    input.scrollIntoView({ block: 'nearest' });
+  } else if (top < 8 || bottom > height - 8) {
+    // Center the label, input, and message together, leaving room for the focus ring.
+    window.scrollBy(0, (top + bottom - height) / 2);
+  }
 }
 
 function warnAboutDraft(event: BeforeUnloadEvent) {
