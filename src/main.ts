@@ -1,5 +1,5 @@
 import './style.css';
-import { createPoll, type Poll } from './poll';
+import { castVote, createPoll, type Poll } from './poll';
 
 const creation = document.querySelector<HTMLDivElement>('#creation')!;
 const form = creation.querySelector<HTMLFormElement>('#create-poll-form')!;
@@ -56,13 +56,58 @@ function showPoll(poll: Poll) {
   heading.textContent = poll.question;
   heading.tabIndex = -1;
 
+  let currentPoll = poll;
+  let selectedOptionId: string | undefined;
+  const receipt = document.createElement('p');
+  receipt.className = 'vote-receipt';
+  receipt.hidden = true;
+  receipt.tabIndex = -1;
+
   const list = document.createElement('ul');
-  for (const { label } of poll.options) {
+  list.setAttribute('role', 'list');
+  const actions: HTMLButtonElement[] = [];
+  for (const [index, { id, label }] of poll.options.entries()) {
     const item = document.createElement('li');
-    item.textContent = label;
+    const row = document.createElement('div');
+    row.className = 'vote-row';
+    const choice = document.createElement('div');
+    choice.className = 'vote-choice';
+    const ordinal = document.createElement('span');
+    ordinal.className = 'vote-ordinal';
+    ordinal.textContent = `Option ${index + 1}`;
+    const name = document.createElement('strong');
+    name.textContent = label;
+    choice.append(ordinal, name);
+
+    const action = document.createElement('button');
+    action.type = 'button';
+    action.textContent = 'Vote';
+    const description = `option ${index + 1}: ${label}`;
+    action.setAttribute('aria-label', `Vote for ${description}`);
+    actions.push(action);
+    action.addEventListener('click', () => {
+      if (selectedOptionId !== undefined) return;
+      const result = castVote(currentPoll, id);
+      if (!result.ok) return;
+      currentPoll = result.poll;
+      selectedOptionId = id;
+
+      for (const button of actions) button.disabled = true;
+      const marker = document.createElement('span');
+      marker.className = 'vote-marker';
+      marker.textContent = 'Your vote';
+      choice.append(marker);
+      row.classList.add('is-selected');
+      receipt.textContent = `You voted for ${description}.`;
+      receipt.hidden = false;
+      receipt.focus();
+    });
+    row.append(choice, action);
+    item.append(row);
     list.append(item);
   }
-  creation.replaceChildren(heading, list);
+  creation.classList.add('saved-poll');
+  creation.replaceChildren(heading, receipt, list);
   heading.focus();
 }
 
