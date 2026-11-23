@@ -15,7 +15,8 @@ function showError(input: HTMLInputElement, message: string) {
   input.setAttribute('aria-describedby', description ? `${description} ${error.id}` : error.id);
   input.setAttribute('aria-invalid', 'true');
   error.textContent = message;
-  input.focus();
+  input.focus({ preventScroll: true });
+  input.scrollIntoView({ block: 'center' });
 
   clearInputError = () => {
     input.removeAttribute('aria-invalid');
@@ -24,7 +25,13 @@ function showError(input: HTMLInputElement, message: string) {
   };
 }
 
+function warnAboutDraft(event: BeforeUnloadEvent) {
+  event.preventDefault();
+  event.returnValue = true;
+}
+
 function showPoll(poll: Poll) {
+  window.removeEventListener('beforeunload', warnAboutDraft);
   const heading = document.createElement('h3');
   heading.textContent = poll.question;
   heading.tabIndex = -1;
@@ -75,6 +82,12 @@ form.addEventListener('submit', (event) => {
     // The form always has at least two inputs; too few options means one is blank.
     showError(blankOption!, 'Enter at least two lunch options.');
   }
+});
+
+form.addEventListener('input', () => {
+  const hasDraft = Array.from(form.querySelectorAll('input')).some(({ value }) => value.trim());
+  if (hasDraft) window.addEventListener('beforeunload', warnAboutDraft);
+  else window.removeEventListener('beforeunload', warnAboutDraft);
 });
 
 form.querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button').forEach((control) => {

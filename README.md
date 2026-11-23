@@ -20,8 +20,8 @@ npm run dev
 
 Open the local URL Vite prints. Enter a poll question and at least two lunch
 options. Use **Add option** for more choices, then **Save poll** to show the
-poll. The page holds one poll at a time, and reloading clears it. Voting results
-are not available yet.
+poll. The page holds one poll at a time, and reloading clears it. Your browser
+can warn before you leave an unsaved draft. Voting results are not available yet.
 
 Run `npm run check` from the repository root to type-check without emitting
 JavaScript and build the production app. After the build, run `npm run preview`

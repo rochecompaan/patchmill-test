@@ -132,6 +132,14 @@ section {
   border-color: var(--plum);
 }
 
+#creation button[type="button"]:enabled:hover {
+  background: var(--paper);
+}
+
+#creation button[type="submit"]:enabled:hover {
+  background: var(--ink);
+}
+
 #creation :is(input, button):disabled {
   opacity: .65;
 }
