@@ -1,0 +1,26 @@
+node_modules/
+dist/
+*.tgz
+coverage/
+reports/
+.stryker-tmp/
+.DS_Store
+.env
+.env.*
+!.env.example
+.patchmill/pi-agent/
+.patchmill/runs/
+.patchmill/state/
+.patchmill/triage-runs/
+.pi/todos/
+.worktrees/
+.tmp/
+.superpowers/
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+site/.astro/
+site/dist/

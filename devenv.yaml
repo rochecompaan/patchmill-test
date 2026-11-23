@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
+inputs:
+  nixpkgs:
+    url: github:cachix/devenv-nixpkgs/rolling
+  # Patchmill from the local clone (committed state of the ref).
+  # New local commits need no push. devenv does not lock a rev for this input,
+  # so run `devenv --refresh-eval-cache shell` once after a new commit.
+  patchmill:
+    url: git+file:///home/roche/projects/patchmill?ref=agent/issue-405-resolve-merge-conflicts-on-open-patchmill-pull-r
