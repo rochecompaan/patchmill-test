@@ -16,13 +16,25 @@ function showError(input: HTMLInputElement, message: string) {
   input.setAttribute('aria-invalid', 'true');
   error.textContent = message;
   input.focus({ preventScroll: true });
-  input.scrollIntoView({ block: 'center' });
+  revealError(input);
 
   clearInputError = () => {
     input.removeAttribute('aria-invalid');
     if (description === null) input.removeAttribute('aria-describedby');
     else input.setAttribute('aria-describedby', description);
   };
+}
+
+function revealError(input: HTMLInputElement) {
+  const field = input.getBoundingClientRect();
+  const message = error.getBoundingClientRect();
+  const top = Math.floor(Math.min(field.top, message.top));
+  const bottom = Math.ceil(Math.max(field.bottom, message.bottom));
+  const height = window.innerHeight;
+
+  if (bottom - top > height) input.scrollIntoView({ block: 'nearest' });
+  else if (top < 0) window.scrollBy(0, top);
+  else if (bottom > height) window.scrollBy(0, bottom - height);
 }
 
 function warnAboutDraft(event: BeforeUnloadEvent) {
