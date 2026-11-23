@@ -71,6 +71,91 @@ section {
   border-top: 2px dashed var(--rule);
 }
 
+#creation,
+#creation fieldset,
+#creation input {
+  min-width: 0;
+}
+
+#creation .field {
+  margin-top: .65rem;
+}
+
+#creation :is(label, legend) {
+  font-weight: 650;
+}
+
+#creation :is(input, button) {
+  font: inherit;
+  border: 1px solid var(--rule);
+  border-radius: .35rem;
+  padding: .5rem .7rem;
+  color: var(--ink);
+}
+
+#creation input {
+  display: block;
+  width: 100%;
+  background: var(--paper);
+}
+
+#creation fieldset {
+  margin: .9rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+#creation legend {
+  padding: 0;
+}
+
+#creation .actions {
+  margin-top: .9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+}
+
+#creation button {
+  min-height: 2.75rem;
+  background: transparent;
+  font-weight: 650;
+}
+
+#creation button:enabled {
+  cursor: pointer;
+}
+
+#creation button[type="submit"] {
+  color: var(--paper);
+  background: var(--plum);
+  border-color: var(--plum);
+}
+
+#creation :is(input, button):disabled {
+  opacity: .65;
+}
+
+#creation :is(input, button, h3):focus {
+  outline: 3px solid var(--plum);
+  outline-offset: 3px;
+}
+
+#creation input[aria-invalid="true"] {
+  border-color: var(--plum);
+}
+
+#poll-error:not(:empty) {
+  margin-top: .65rem;
+  color: var(--plum);
+  font-weight: 700;
+}
+
+#creation ul {
+  margin: .65rem 0 0;
+  padding-inline-start: 1.5rem;
+}
+
 @media (min-width: 40rem) {
   .notices {
     grid-template-columns: repeat(2, minmax(0, 1fr));

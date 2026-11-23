@@ -16,9 +16,33 @@
       <section aria-labelledby="workspace-heading">
         <h2 id="workspace-heading">Poll workspace</h2>
         <div class="notices">
-          <div class="notice">
+          <div class="notice" id="creation">
             <h3>Create a poll</h3>
-            <p>Poll creation will appear here.</p>
+            <form id="create-poll-form" novalidate>
+              <div class="field">
+                <label for="poll-question">Poll question</label>
+                <input id="poll-question" name="question" type="text" disabled>
+              </div>
+              <fieldset aria-describedby="options-hint">
+                <legend>Lunch options</legend>
+                <p id="options-hint">Enter at least two lunch options.</p>
+                <div id="option-fields">
+                  <div class="field">
+                    <label for="option-1">Option 1</label>
+                    <input id="option-1" name="option" type="text" disabled>
+                  </div>
+                  <div class="field">
+                    <label for="option-2">Option 2</label>
+                    <input id="option-2" name="option" type="text" disabled>
+                  </div>
+                </div>
+              </fieldset>
+              <p id="poll-error" role="alert"></p>
+              <div class="actions">
+                <button id="add-option" type="button" disabled>Add option</button>
+                <button type="submit" disabled>Save poll</button>
+              </div>
+            </form>
           </div>
           <div class="notice">
             <h3>Results</h3>
