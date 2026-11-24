@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Lunch Poll — Issue #6 mockup</title>
+<meta name="description" content="Mockup for 2026-11-24-issue-6-persist-polls-locally-design.md">
+<style>
+:root{--plum:#3d2452;--lilac:#f2edf8;--mint:#e5f5eb;--ink:#20352c;--rule:#49695a;--paper:#fffafc}
+*{box-sizing:border-box}body{margin:0;background:var(--lilac);color:var(--ink);font:1rem/1.55 system-ui,sans-serif;overflow-wrap:anywhere}main{width:min(calc(100% - 2rem),58rem);margin:clamp(1rem,7vw,5rem) auto}header,section{padding:clamp(1.25rem,5vw,4rem)}header{border-radius:2rem 2rem .5rem .5rem;background:var(--plum);color:var(--paper)}h1{margin:0 0 .75rem;font:bold clamp(2.25rem,8vw,5rem)/1 Georgia,serif}h2,h3{margin:0 0 .5rem;line-height:1.2}p{max-width:45ch;margin:0}section{margin-top:.75rem;border-radius:.5rem .5rem 2rem 2rem;background:var(--mint)}.notices{display:grid;gap:1rem;margin-top:1.25rem}.notice{min-width:0;padding-top:.75rem;border-top:2px dashed var(--rule)}ul{list-style:none;padding:0;margin:.65rem 0 0}li,.actions{display:flex;align-items:center;flex-wrap:wrap;gap:.65rem}li{padding:.65rem .5rem;border-bottom:1px solid var(--rule)}li div{flex:1 1 8rem;min-width:0}small,strong{display:block}.chosen,input{background:var(--paper)}.receipt,.marker{color:var(--plum);font-weight:700}.receipt{margin:.85rem 0}.actions,.field{margin-top:.9rem}button,input{font:inherit;color:inherit;border:1px solid var(--rule);border-radius:.35rem;padding:.5rem .7rem}button{min-height:2.75rem;background:transparent;font-weight:650}button:enabled{cursor:pointer}button:enabled:hover{background:var(--paper)}button:disabled{opacity:.65}.primary{background:var(--plum);color:var(--paper)}.primary:enabled:hover{background:var(--ink)}:focus{outline:3px solid var(--plum);outline-offset:3px}label{display:block;font-weight:650}input{width:100%}fieldset{padding:0;border:0;min-width:0;margin:.9rem 0 0}legend{font-weight:650}[hidden]{display:none!important}@media(min-width:40rem){.notices{grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Team Lunch Poll</h1><p>Help your team decide where or what to eat for lunch.</p></header>
+<section aria-labelledby="workspace">
+<h2 id="workspace">Poll workspace</h2>
+<div class="notices">
+<div class="notice">
+<div id="saved">
+<h3>Where should we eat Friday?</h3>
+<p class="receipt">You voted for option 2: Tacos.</p>
+<ul role="list">
+<li><div><small>Option 1</small><strong>Pizza</strong></div><button type="button" aria-label="Vote for option 1: Pizza" disabled>Vote</button></li>
+<li class="chosen"><div><small>Option 2</small><strong>Tacos</strong><small class="marker">Your vote</small></div><button type="button" aria-label="Vote for option 2: Tacos" disabled>Vote</button></li>
+</ul>
+<div class="actions" id="opener"><button type="button" id="open">Reset poll</button></div>
+<div class="actions" id="confirmation" role="group" aria-labelledby="prompt" hidden>
+<p id="prompt">Reset this poll and remove its votes from this browser?</p>
+<button type="button" id="cancel">Cancel</button><button type="button" id="reset">Reset poll</button>
+</div>
+</div>
+<div id="create" hidden>
+<h3>Create a poll</h3>
+<form autocomplete="off">
+<div class="field"><label for="question">Poll question</label><input id="question"></div>
+<fieldset aria-describedby="hint"><legend>Lunch options</legend><p id="hint">Enter at least two lunch options.</p>
+<div class="field"><label for="first">Option 1</label><input id="first"></div>
+<div class="field"><label for="second">Option 2</label><input id="second"></div></fieldset>
+<div class="actions"><button type="button" disabled>Add option</button><button type="button" class="primary" disabled>Save poll</button></div>
+</form>
+</div>
+</div>
+<div class="notice"><h3>Results</h3><p>Voting results will appear here.</p></div>
+</div>
+</section>
+<p style="margin-top:1rem;font-size:.875rem">Issue #6 mockup. The starting view represents a restored vote. Reset shows the empty form. This preview does not save data.</p>
+</main>
+<script>
+const byId = id => document.getElementById(id);
+const showConfirmation = open => {
+  byId('opener').hidden = open;
+  byId('confirmation').hidden = !open;
+  byId(open ? 'cancel' : 'open').focus();
+};
+byId('open').onclick = () => showConfirmation(true);
+byId('cancel').onclick = () => showConfirmation(false);
+byId('reset').onclick = () => {
+  byId('saved').hidden = true;
+  byId('create').hidden = false;
+  byId('question').focus();
+};
+</script>
+</body>
+</html>
