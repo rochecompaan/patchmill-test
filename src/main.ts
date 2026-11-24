@@ -55,7 +55,7 @@ function warnAboutDraft(event: BeforeUnloadEvent) {
 function renderResults(poll: Poll): void {
   const { counts, leadingOptionIds } = getPollResults(poll);
   const leaders = new Set(leadingOptionIds);
-  let summary = leaders.size > 1 ? 'The poll is tied.' : 'No votes yet. Choose an option to vote.';
+  let summary: string | DocumentFragment = leaders.size > 1 ? 'The poll is tied.' : 'No votes yet. Choose an option to vote.';
   const rows = document.createDocumentFragment();
 
   for (const [index, { optionId, count }] of counts.entries()) {
@@ -69,7 +69,9 @@ function renderResults(poll: Poll): void {
     ordinal.className = 'result-ordinal';
     ordinal.textContent = `Option ${index + 1}`;
     const name = document.createElement('strong');
-    name.textContent = label;
+    const isolatedLabel = document.createElement('bdi');
+    isolatedLabel.textContent = label;
+    name.append(isolatedLabel);
     choice.append(ordinal, name);
     if (leading) {
       const marker = document.createElement('span');
@@ -79,7 +81,8 @@ function renderResults(poll: Poll): void {
     }
     if (soleLeader) {
       item.classList.add('is-leader');
-      summary = `Current leader: ${ordinal.textContent}: ${label}.`;
+      summary = document.createDocumentFragment();
+      summary.append(`Current leader: ${ordinal.textContent}: `, isolatedLabel.cloneNode(true), '.');
     }
     const tally = document.createElement('span');
     tally.className = 'result-count';
@@ -90,7 +93,7 @@ function renderResults(poll: Poll): void {
 
   resultsCounts.replaceChildren(rows);
   resultsCounts.hidden = false;
-  resultsSummary.textContent = summary;
+  resultsSummary.replaceChildren(summary);
 }
 
 function showPoll(poll: Poll) {
