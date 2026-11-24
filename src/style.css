@@ -159,9 +159,63 @@ section {
   font-weight: 700;
 }
 
-#creation ul {
+#creation.saved-poll ul {
+  list-style: none;
   margin: .65rem 0 0;
-  padding-inline-start: 1.5rem;
+  padding: 0;
+}
+
+.saved-poll .vote-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  padding: .65rem .5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.saved-poll .vote-choice {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+.saved-poll .vote-ordinal,
+.saved-poll .vote-marker {
+  display: block;
+  font-size: .875rem;
+}
+
+.saved-poll .vote-row.is-selected {
+  background: var(--paper);
+}
+
+.saved-poll .vote-marker,
+.saved-poll .vote-receipt {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.saved-poll .vote-receipt {
+  margin: .85rem 0;
+}
+
+.saved-poll .vote-receipt:focus {
+  outline: 3px solid var(--plum);
+  outline-offset: 3px;
+}
+
+.saved-poll .vote-row button {
+  touch-action: manipulation;
+}
+
+#creation.saved-poll button:enabled {
+  color: var(--paper);
+  background: var(--plum);
+  border-color: var(--plum);
+}
+
+#creation.saved-poll button:enabled:hover {
+  background: var(--ink);
 }
 
 @media (min-width: 40rem) {

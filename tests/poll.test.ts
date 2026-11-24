@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { countVotes, createPoll, type Poll } from '../src/poll.ts';
+import { castVote, countVotes, createPoll, type Poll } from '../src/poll.ts';
 
 test('rejects a blank question before checking options', () => {
   assert.deepEqual(createPoll(' \t ', []), { ok: false, reason: 'question-required' });
@@ -45,6 +45,29 @@ const poll: Poll = {
   options: [otherPizza, pizza],
   votes: [{ optionId: pizza.id }, { optionId: pizza.id }, { optionId: 'removed' }],
 };
+
+test('appends a vote by exact ID without changing the input', () => {
+  const before = structuredClone(poll);
+  for (const { id } of [pizza, otherPizza]) {
+    const result = castVote(poll, id);
+    assert.deepEqual(result, {
+      ok: true,
+      poll: { ...before, votes: [...before.votes, { optionId: id }] },
+    });
+    if (!result.ok) assert.fail('expected a vote');
+    assert.notStrictEqual(result.poll, poll);
+    assert.notStrictEqual(result.poll.votes, poll.votes);
+    assert.deepEqual(poll, before);
+  }
+});
+
+test('rejects an unknown option without changing the input', () => {
+  const before = structuredClone(poll);
+  for (const id of ['removed', '__PROTO__']) {
+    assert.deepEqual(castVote(poll, id), { ok: false, reason: 'unknown-option' });
+  }
+  assert.deepEqual(poll, before);
+});
 
 const pizzaCount = { optionId: pizza.id, count: 2 };
 const otherCount = { optionId: otherPizza.id, count: 0 };

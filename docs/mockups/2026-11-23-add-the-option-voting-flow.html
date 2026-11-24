@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Lunch Poll — Voting mockup (Issue #4)</title>
+<!-- Design: 2026-11-23-issue-4-add-the-option-voting-flow-design.md -->
+<style>
+:root { --plum:#3d2452; --lilac:#f2edf8; --mint:#e5f5eb; --ink:#20352c; --rule:#49695a; --paper:#fffafc; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--lilac); color:var(--ink); font:1rem/1.55 system-ui,sans-serif; overflow-wrap:anywhere; }
+main { width:min(calc(100% - 2rem),58rem); margin:clamp(1rem,7vw,5rem) auto; }
+header, section { padding:clamp(1.25rem,5vw,4rem); }
+header { border-radius:2rem 2rem .5rem .5rem; background:var(--plum); color:var(--paper); }
+h1 { margin:0 0 .75rem; font:bold clamp(2.25rem,8vw,5rem)/1 Georgia,serif; }
+h2,h3 { margin:0 0 .5rem; line-height:1.2; text-wrap:balance; }
+p { margin:0; max-width:45ch; }
+section { margin-top:.75rem; border-radius:.5rem .5rem 2rem 2rem; background:var(--mint); }
+.notices { display:grid; gap:1rem; margin-top:1.25rem; }
+.notice { min-width:0; padding-top:.75rem; border-top:2px dashed var(--rule); }
+ul { list-style:none; margin:.65rem 0 0; padding:0; }
+li { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; padding:.65rem .25rem; border-bottom:1px solid var(--rule); }
+.choice { flex:1 1 8rem; min-width:0; }
+.ordinal { display:block; font-size:.875rem; }
+li[data-selected] { background:var(--paper); }
+.mark:not([hidden]) { display:block; font-weight:700; color:var(--plum); }
+button { font:inherit; font-weight:650; min-height:2.75rem; padding:.5rem .7rem; border:1px solid var(--plum); border-radius:.35rem; background:var(--plum); color:var(--paper); }
+button:enabled { cursor:pointer; }
+button:enabled:hover { background:var(--ink); }
+button:disabled { background:transparent; border-color:var(--rule); color:var(--ink); opacity:.65; }
+:focus-visible, #receipt:focus { outline:3px solid var(--plum); outline-offset:3px; }
+#receipt { margin:.85rem 0; font-weight:700; color:var(--plum); }
+@media (min-width:40rem) { .notices { grid-template-columns:repeat(2,minmax(0,1fr)); gap:2rem; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Team Lunch Poll</h1>
+    <p>Help your team decide where or what to eat for lunch.</p>
+  </header>
+  <section aria-labelledby="workspace-heading">
+    <h2 id="workspace-heading">Poll workspace</h2>
+    <div class="notices">
+      <div class="notice">
+        <h3>What is for lunch?</h3>
+        <p id="receipt" tabindex="-1" hidden></p>
+        <ul role="list" id="options">
+          <li><span class="choice"><span class="ordinal">Option 1</span><strong>Tacos</strong><span class="mark" hidden>Your vote</span></span><button type="button" aria-label="Vote for option 1: Tacos">Vote</button></li>
+          <li><span class="choice"><span class="ordinal">Option 2</span><strong>Tacos</strong><span class="mark" hidden>Your vote</span></span><button type="button" aria-label="Vote for option 2: Tacos">Vote</button></li>
+          <li><span class="choice"><span class="ordinal">Option 3</span><strong>Rice bowls</strong><span class="mark" hidden>Your vote</span></span><button type="button" aria-label="Vote for option 3: Rice bowls">Vote</button></li>
+        </ul>
+      </div>
+      <div class="notice">
+        <h3>Results</h3>
+        <p>Voting results will appear here.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+const receipt = document.querySelector('#receipt');
+const buttons = document.querySelectorAll('#options button');
+let voted = false;
+buttons.forEach((button) => button.addEventListener('click', () => {
+  if (voted) return;
+  voted = true;
+  const row = button.closest('li');
+  row.dataset.selected = '';
+  row.querySelector('.mark').hidden = false;
+  buttons.forEach((action) => { action.disabled = true; });
+  const ordinal = row.querySelector('.ordinal').textContent.toLowerCase();
+  const label = row.querySelector('strong').textContent;
+  receipt.textContent = `You voted for ${ordinal}: ${label}.`;
+  receipt.hidden = false;
+  receipt.focus();
+}));
+</script>
+</body>
+</html>
