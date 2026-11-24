@@ -18,6 +18,11 @@ export interface OptionVoteCount {
   readonly count: number;
 }
 
+export interface PollResults {
+  readonly counts: readonly OptionVoteCount[];
+  readonly leadingOptionIds: readonly string[];
+}
+
 export type CreatePollResult =
   | { ok: true; poll: Poll }
   | { ok: false; reason: 'question-required' | 'options-required' };
@@ -61,4 +66,15 @@ export function countVotes(poll: Poll): readonly OptionVoteCount[] {
   }
 
   return Array.from(counts, ([optionId, count]) => ({ optionId, count }));
+}
+
+export function getPollResults(poll: Poll): PollResults {
+  const counts = countVotes(poll);
+  let highest = 0;
+  for (const { count } of counts) highest = Math.max(highest, count);
+
+  const leadingOptionIds = highest > 0
+    ? counts.filter(({ count }) => count === highest).map(({ optionId }) => optionId)
+    : [];
+  return { counts, leadingOptionIds };
 }
