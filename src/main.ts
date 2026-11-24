@@ -1,5 +1,5 @@
 import './style.css';
-import { castVote, createPoll, type Poll } from './poll';
+import { castVote, createPoll, getPollResults, type Poll } from './poll';
 import { createPollStore } from './poll-storage';
 
 const creation = document.querySelector<HTMLDivElement>('#creation')!;
@@ -18,6 +18,9 @@ const question = form.querySelector<HTMLInputElement>('#poll-question')!;
 const fields = form.querySelector<HTMLDivElement>('#option-fields')!;
 const error = form.querySelector<HTMLParagraphElement>('#poll-error')!;
 const addOption = form.querySelector<HTMLButtonElement>('#add-option')!;
+const resultsSummary = document.querySelector<HTMLParagraphElement>('#results-summary')!;
+const resultsCounts = document.querySelector<HTMLUListElement>('#results-counts')!;
+const emptyResultsSummary = resultsSummary.textContent;
 
 const store = createPollStore(() => window.localStorage);
 let currentPoll: Poll | undefined;
@@ -67,6 +70,50 @@ function revealError(input: HTMLInputElement) {
 function warnAboutDraft(event: BeforeUnloadEvent) {
   event.preventDefault();
   event.returnValue = true;
+}
+
+function renderResults(poll: Poll): void {
+  const { counts, leadingOptionIds } = getPollResults(poll);
+  const leaders = new Set(leadingOptionIds);
+  let summary: string | DocumentFragment = leaders.size > 1 ? 'The poll is tied.' : 'No votes yet. Choose an option to vote.';
+  const rows = document.createDocumentFragment();
+
+  for (const [index, { optionId, count }] of counts.entries()) {
+    const { label } = poll.options[index];
+    const leading = leaders.has(optionId);
+    const soleLeader = leading && leaders.size === 1;
+    const item = document.createElement('li');
+    const choice = document.createElement('div');
+    choice.className = 'result-choice';
+    const ordinal = document.createElement('span');
+    ordinal.className = 'result-ordinal';
+    ordinal.textContent = `Option ${index + 1}`;
+    const name = document.createElement('strong');
+    const isolatedLabel = document.createElement('bdi');
+    isolatedLabel.textContent = label;
+    name.append(isolatedLabel);
+    choice.append(ordinal, name);
+    if (leading) {
+      const marker = document.createElement('span');
+      marker.className = 'result-marker';
+      marker.textContent = soleLeader ? 'Leader' : 'Tied for lead';
+      choice.append(marker);
+    }
+    if (soleLeader) {
+      item.classList.add('is-leader');
+      summary = document.createDocumentFragment();
+      summary.append(`Current leader: ${ordinal.textContent}: `, isolatedLabel.cloneNode(true), '.');
+    }
+    const tally = document.createElement('span');
+    tally.className = 'result-count';
+    tally.textContent = `${count} ${count === 1 ? 'vote' : 'votes'}`;
+    item.append(choice, tally);
+    rows.append(item);
+  }
+
+  resultsCounts.replaceChildren(rows);
+  resultsCounts.hidden = false;
+  resultsSummary.replaceChildren(summary);
 }
 
 function buildOptions(poll: Poll, receipt: HTMLParagraphElement) {
@@ -155,6 +202,9 @@ function showCleanForm() {
   window.removeEventListener('beforeunload', warnAboutDraft);
   creation.classList.remove('saved-poll');
   createPanel.hidden = false;
+  resultsCounts.hidden = true;
+  resultsCounts.replaceChildren();
+  resultsSummary.textContent = emptyResultsSummary;
   question.focus();
 }
 
@@ -168,12 +218,14 @@ function showPoll(poll: Poll, transition: 'restore' | 'create' | 'vote') {
   receipt.className = 'vote-receipt';
   receipt.hidden = true;
   receipt.tabIndex = -1;
+  receipt.setAttribute('aria-describedby', resultsSummary.id);
 
   const options = buildOptions(poll, receipt);
   pollContent.replaceChildren(heading, receipt, options);
   createPanel.hidden = true;
   savedPanel.hidden = false;
   creation.classList.add('saved-poll');
+  renderResults(poll);
   if (transition === 'create') heading.focus();
   if (transition === 'vote') receipt.focus();
 }

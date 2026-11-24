@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { castVote, countVotes, createPoll, type Poll } from '../src/poll.ts';
+import { castVote, countVotes, createPoll, getPollResults, type Poll } from '../src/poll.ts';
 
 test('rejects a blank question before checking options', () => {
   assert.deepEqual(createPoll(' \t ', []), { ok: false, reason: 'question-required' });
@@ -97,4 +97,48 @@ test('does not change the poll and produces fresh rows', () => {
   for (const [index, row] of first.entries()) {
     assert.notStrictEqual(row, second[index]);
   }
+});
+
+test('shows zero counts and no leaders without counted votes', () => {
+  assert.deepEqual(getPollResults({ ...poll, votes: [{ optionId: 'removed' }] }), {
+    counts: [{ optionId: otherPizza.id, count: 0 }, { optionId: pizza.id, count: 0 }],
+    leadingOptionIds: [],
+  });
+  assert.deepEqual(getPollResults({ ...poll, options: [] }), {
+    counts: [], leadingOptionIds: [],
+  });
+});
+
+test('reports top-count ties and recalculates after each accepted vote', () => {
+  const third = { id: 'soup', label: 'Soup' };
+  const snapshot = {
+    ...poll,
+    options: [...poll.options, third],
+    votes: [...poll.votes, { optionId: otherPizza.id }, { optionId: otherPizza.id }],
+  };
+  const tied = {
+    counts: [
+      { optionId: otherPizza.id, count: 2 },
+      { optionId: pizza.id, count: 2 },
+      { optionId: third.id, count: 0 },
+    ],
+    leadingOptionIds: [otherPizza.id, pizza.id],
+  };
+  assert.deepEqual(getPollResults(snapshot), tied);
+  const next = castVote(snapshot, pizza.id);
+  if (!next.ok) assert.fail('expected another vote for the existing option');
+  assert.deepEqual(getPollResults(next.poll), {
+    counts: [tied.counts[0], { optionId: pizza.id, count: 3 }, tied.counts[2]],
+    leadingOptionIds: [pizza.id],
+  });
+  assert.deepEqual(getPollResults(snapshot), tied);
+});
+
+test('does not treat a tie below the highest count as a poll tie', () => {
+  const result = getPollResults({
+    ...poll,
+    options: [...poll.options, { id: 'soup', label: 'Soup' }],
+    votes: [...poll.votes, { optionId: otherPizza.id }, { optionId: 'soup' }],
+  });
+  assert.deepEqual(result.leadingOptionIds, [pizza.id]);
 });

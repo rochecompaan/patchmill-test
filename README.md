@@ -24,7 +24,12 @@ poll. Choose **Vote** next to one option. The poll confirms your choice and
 locks all vote buttons, so you can vote only once in that poll. The current
 poll and vote stay in this browser after a refresh. Choose **Reset poll** and
 confirm to remove both and start over. Your browser can warn before you leave
-an unsaved draft. Voting results are not available yet.
+an unsaved draft.
+
+Results show zero votes for each option when you save the poll and update each
+option's count immediately after you vote. Results highlight a sole current
+leader or report a tie when options share the highest positive count. The
+one-vote limit means a tie cannot occur in this browser flow.
 
 Run `npm run check` from the repository root to type-check without emitting
 JavaScript and build the production app. After the build, run `npm run preview`
