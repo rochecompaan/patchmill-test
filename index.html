@@ -17,32 +17,48 @@
         <h2 id="workspace-heading">Poll workspace</h2>
         <div class="notices">
           <div class="notice" id="creation">
-            <h3>Create a poll</h3>
-            <form id="create-poll-form" autocomplete="off" novalidate>
-              <div class="field">
-                <label for="poll-question">Poll question</label>
-                <input id="poll-question" name="question" type="text" disabled>
-              </div>
-              <p id="poll-error" role="alert"></p>
-              <fieldset aria-describedby="options-hint">
-                <legend>Lunch options</legend>
-                <p id="options-hint">Enter at least two lunch options.</p>
-                <div id="option-fields">
-                  <div class="field">
-                    <label for="option-1">Option 1</label>
-                    <input id="option-1" name="option" type="text" disabled>
-                  </div>
-                  <div class="field">
-                    <label for="option-2">Option 2</label>
-                    <input id="option-2" name="option" type="text" disabled>
-                  </div>
+            <p id="storage-status" role="status"></p>
+            <div id="create-panel">
+              <h3>Create a poll</h3>
+              <form id="create-poll-form" autocomplete="off" novalidate>
+                <div class="field">
+                  <label for="poll-question">Poll question</label>
+                  <input id="poll-question" name="question" type="text" disabled>
                 </div>
-              </fieldset>
-              <div class="actions">
-                <button id="add-option" type="button" disabled>Add option</button>
-                <button type="submit" disabled>Save poll</button>
+                <p id="poll-error" role="alert"></p>
+                <fieldset aria-describedby="options-hint">
+                  <legend>Lunch options</legend>
+                  <p id="options-hint">Enter at least two lunch options.</p>
+                  <div id="option-fields">
+                    <div class="field">
+                      <label for="option-1">Option 1</label>
+                      <input id="option-1" name="option" type="text" disabled>
+                    </div>
+                    <div class="field">
+                      <label for="option-2">Option 2</label>
+                      <input id="option-2" name="option" type="text" disabled>
+                    </div>
+                  </div>
+                </fieldset>
+                <div class="actions">
+                  <button id="add-option" type="button" disabled>Add option</button>
+                  <button type="submit" disabled>Save poll</button>
+                </div>
+              </form>
+            </div>
+            <div id="saved-panel" hidden></div>
+            <template id="reset-controls">
+              <div class="actions reset-opener">
+                <button type="button">Reset poll</button>
               </div>
-            </form>
+              <div class="reset-confirmation" role="group" aria-labelledby="reset-prompt" hidden>
+                <p id="reset-prompt">Reset this poll and remove its votes from this browser?</p>
+                <div class="actions">
+                  <button class="cancel-reset" type="button">Cancel</button>
+                  <button class="confirm-reset" type="button">Reset poll</button>
+                </div>
+              </div>
+            </template>
           </div>
           <div class="notice">
             <h3>Results</h3>

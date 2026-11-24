@@ -109,7 +109,7 @@ section {
   padding: 0;
 }
 
-#creation .actions {
+#creation .actions:not([hidden]) {
   margin-top: .9rem;
   display: flex;
   flex-wrap: wrap;
@@ -208,14 +208,28 @@ section {
   touch-action: manipulation;
 }
 
-#creation.saved-poll button:enabled {
+#creation.saved-poll .vote-row button:enabled {
   color: var(--paper);
   background: var(--plum);
   border-color: var(--plum);
 }
 
-#creation.saved-poll button:enabled:hover {
+#creation.saved-poll .vote-row button:enabled:hover {
   background: var(--ink);
+}
+
+#storage-status:not(:empty) {
+  margin-bottom: .75rem;
+  color: var(--plum);
+  font-weight: 700;
+}
+
+.reset-confirmation {
+  margin-top: .9rem;
+}
+
+.reset-confirmation .actions {
+  margin-top: .5rem;
 }
 
 @media (min-width: 40rem) {
