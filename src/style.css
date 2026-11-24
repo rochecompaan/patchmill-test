@@ -153,7 +153,7 @@ section {
   border-color: var(--plum);
 }
 
-#poll-error:not(:empty) {
+:is(#poll-error, #reset-error):not(:empty) {
   margin-top: .65rem;
   color: var(--plum);
   font-weight: 700;
@@ -224,11 +224,11 @@ section {
   font-weight: 700;
 }
 
-.reset-confirmation {
+#reset-confirmation {
   margin-top: .9rem;
 }
 
-.reset-confirmation .actions {
+#reset-confirmation .actions {
   margin-top: .5rem;
 }
 

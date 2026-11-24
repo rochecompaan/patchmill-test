@@ -6,7 +6,13 @@ const creation = document.querySelector<HTMLDivElement>('#creation')!;
 const createPanel = creation.querySelector<HTMLDivElement>('#create-panel')!;
 const savedPanel = creation.querySelector<HTMLDivElement>('#saved-panel')!;
 const status = creation.querySelector<HTMLParagraphElement>('#storage-status')!;
-const resetTemplate = creation.querySelector<HTMLTemplateElement>('#reset-controls')!;
+const pollContent = savedPanel.querySelector<HTMLDivElement>('#poll-content')!;
+const resetOpener = savedPanel.querySelector<HTMLDivElement>('#reset-opener')!;
+const openReset = resetOpener.querySelector('button')!;
+const resetConfirmation = savedPanel.querySelector<HTMLDivElement>('#reset-confirmation')!;
+const cancelReset = resetConfirmation.querySelector<HTMLButtonElement>('#cancel-reset')!;
+const confirmReset = resetConfirmation.querySelector<HTMLButtonElement>('#confirm-reset')!;
+const resetError = resetConfirmation.querySelector<HTMLParagraphElement>('#reset-error')!;
 const form = creation.querySelector<HTMLFormElement>('#create-poll-form')!;
 const question = form.querySelector<HTMLInputElement>('#poll-question')!;
 const fields = form.querySelector<HTMLDivElement>('#option-fields')!;
@@ -108,42 +114,40 @@ function buildOptions(poll: Poll, receipt: HTMLParagraphElement) {
   return list;
 }
 
-function buildResetControls(poll: Poll) {
-  const controls = resetTemplate.content.cloneNode(true) as DocumentFragment;
-  const opener = controls.querySelector<HTMLDivElement>('.reset-opener')!;
-  const open = opener.querySelector('button')!;
-  const confirmation = controls.querySelector<HTMLDivElement>('.reset-confirmation')!;
-  const cancel = controls.querySelector<HTMLButtonElement>('.cancel-reset')!;
-  const confirm = controls.querySelector<HTMLButtonElement>('.confirm-reset')!;
-
-  open.addEventListener('click', () => {
-    if (currentPoll !== poll || !confirmation.hidden) return;
-    opener.hidden = true;
-    confirmation.hidden = false;
-    cancel.focus();
-  });
-  cancel.addEventListener('click', () => {
-    if (currentPoll !== poll || confirmation.hidden) return;
-    confirmation.hidden = true;
-    opener.hidden = false;
-    open.focus();
-  });
-  confirm.addEventListener('click', () => {
-    if (currentPoll !== poll || confirmation.hidden) return;
-    if (!store.clear()) {
-      status.textContent = 'Could not reset this poll. Try again.';
-      return;
-    }
-    currentPoll = undefined;
-    status.textContent = '';
-    showCleanForm();
-  });
-  return controls;
+function closeResetConfirmation() {
+  resetError.textContent = '';
+  resetConfirmation.hidden = true;
+  resetOpener.hidden = false;
 }
+
+openReset.addEventListener('click', () => {
+  if (!currentPoll || !resetConfirmation.hidden) return;
+  resetOpener.hidden = true;
+  resetConfirmation.hidden = false;
+  cancelReset.focus();
+});
+
+cancelReset.addEventListener('click', () => {
+  if (!currentPoll || resetConfirmation.hidden) return;
+  closeResetConfirmation();
+  openReset.focus();
+});
+
+confirmReset.addEventListener('click', () => {
+  if (!currentPoll || resetConfirmation.hidden) return;
+  if (!store.clear()) {
+    resetError.textContent = 'Could not reset this poll. Try again.';
+    return;
+  }
+  currentPoll = undefined;
+  status.textContent = '';
+  showCleanForm();
+});
 
 function showCleanForm() {
   savedPanel.hidden = true;
-  savedPanel.replaceChildren();
+  pollContent.replaceChildren();
+  closeResetConfirmation();
   clearDraftError();
   form.reset();
   while (fields.childElementCount > 2) fields.lastElementChild!.remove();
@@ -165,7 +169,7 @@ function showPoll(poll: Poll, transition: 'restore' | 'create' | 'vote') {
   receipt.tabIndex = -1;
 
   const options = buildOptions(poll, receipt);
-  savedPanel.replaceChildren(heading, receipt, options, buildResetControls(poll));
+  pollContent.replaceChildren(heading, receipt, options);
   createPanel.hidden = true;
   savedPanel.hidden = false;
   creation.classList.add('saved-poll');

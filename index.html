@@ -46,19 +46,20 @@
                 </div>
               </form>
             </div>
-            <div id="saved-panel" hidden></div>
-            <template id="reset-controls">
-              <div class="actions reset-opener">
+            <div id="saved-panel" hidden>
+              <div id="poll-content"></div>
+              <div class="actions" id="reset-opener">
                 <button type="button">Reset poll</button>
               </div>
-              <div class="reset-confirmation" role="group" aria-labelledby="reset-prompt" hidden>
+              <div id="reset-confirmation" role="group" aria-labelledby="reset-prompt" hidden>
                 <p id="reset-prompt">Reset this poll and remove its votes from this browser?</p>
                 <div class="actions">
-                  <button class="cancel-reset" type="button">Cancel</button>
-                  <button class="confirm-reset" type="button">Reset poll</button>
+                  <button id="cancel-reset" type="button">Cancel</button>
+                  <button id="confirm-reset" type="button">Reset poll</button>
                 </div>
+                <p id="reset-error" role="alert"></p>
               </div>
-            </template>
+            </div>
           </div>
           <div class="notice">
             <h3>Results</h3>
