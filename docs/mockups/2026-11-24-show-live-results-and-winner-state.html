@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Lunch Poll — Issue #5 results mockup</title>
+  <!-- Design: docs/specs/2026-11-24-issue-5-show-live-results-and-winner-state-design.md -->
+  <style>
+    :root { --plum:#3d2452; --lilac:#f2edf8; --mint:#e5f5eb; --paper:#fffafc; --ink:#20352c; --rule:#49695a }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--lilac); color:var(--ink); font:1rem/1.55 system-ui,sans-serif; overflow-wrap:anywhere }
+    main, nav { width:min(calc(100% - 2rem),58rem); margin-inline:auto }
+    nav { margin-block:1rem; display:flex; flex-wrap:wrap; gap:.5rem 1rem }
+    a { color:var(--plum) }
+    main { margin-block:clamp(1rem,7vw,5rem) }
+    header, section { padding:clamp(1.25rem,5vw,4rem) }
+    header { border-radius:2rem 2rem .5rem .5rem; background:var(--plum); color:var(--paper) }
+    h1 { margin:0 0 .75rem; font:bold clamp(2.25rem,8vw,5rem)/1 Georgia,serif }
+    h2, h3 { margin:0 0 .5rem; line-height:1.2 }
+    p { margin:0; max-width:45ch }
+    section { margin-top:.75rem; border-radius:.5rem .5rem 2rem 2rem; background:var(--mint) }
+    .notices { display:grid; gap:1rem; margin-top:1.25rem }
+    .notice { min-width:0; padding-top:.75rem; border-top:2px dashed var(--rule) }
+    ul { list-style:none; margin:.65rem 0 0; padding:0 }
+    li { display:flex; flex-wrap:wrap; align-items:center; gap:.35rem .65rem; padding:.65rem .5rem; border-bottom:1px solid var(--rule) }
+    .choice { flex:1 1 8rem; min-width:0 }
+    .ordinal, .marker { display:block; font-size:.875rem }
+    .marker, #receipt { color:var(--plum); font-weight:700 }
+    #receipt { margin:.85rem 0 }
+    .highlight { background:var(--paper) }
+    .count { white-space:nowrap; font-variant-numeric:tabular-nums }
+    button { min-height:2.75rem; padding:.5rem .7rem; border:1px solid var(--rule); border-radius:.35rem; font:inherit; font-weight:650; color:var(--ink); background:transparent; touch-action:manipulation }
+    button:enabled { cursor:pointer; color:var(--paper); background:var(--plum); border-color:var(--plum) }
+    button:enabled:hover { background:var(--ink) }
+    button:disabled { opacity:.65 }
+    :is(a,button,p):focus { outline:3px solid var(--plum); outline-offset:3px }
+    @media (min-width:40rem) { .notices { grid-template-columns:repeat(2,minmax(0,1fr)); gap:2rem } }
+  </style>
+</head>
+<body>
+  <nav aria-label="Mockup examples">
+    <span>Design examples:</span>
+    <a href="?example=vote">Try voting</a>
+    <a href="?example=tie">See a tied poll</a>
+  </nav>
+  <main>
+    <header>
+      <h1>Team Lunch Poll</h1>
+      <p>Help your team decide where or what to eat for lunch.</p>
+    </header>
+    <section aria-labelledby="workspace-heading">
+      <h2 id="workspace-heading">Poll workspace</h2>
+      <div class="notices">
+        <div class="notice">
+          <h3>Where should we eat on Friday?</h3>
+          <p id="receipt" hidden tabindex="-1" aria-describedby="results-summary"></p>
+          <ul id="options" role="list"></ul>
+        </div>
+        <div class="notice">
+          <h3>Results</h3>
+          <p id="results-summary"></p>
+          <ul id="counts" role="list"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Fixture links set the initial counts. They are not part of the app.
+    const tiedExample = new URLSearchParams(location.search).get('example') === 'tie';
+    const labels = ['Falafel wraps', 'Tacos', 'Soup and sandwiches'];
+    const votes = tiedExample ? [2, 2, 0] : [0, 0, 0];
+    let selection = tiedExample ? 1 : undefined;
+    const options = document.querySelector('#options');
+    const counts = document.querySelector('#counts');
+    const summary = document.querySelector('#results-summary');
+    const receipt = document.querySelector('#receipt');
+
+    function el(tag, text, className) {
+      const node = document.createElement(tag);
+      node.textContent = text ?? '';
+      if (className) node.className = className;
+      return node;
+    }
+
+    function row(label, index, marker, highlighted) {
+      const item = el('li', '', highlighted ? 'highlight' : '');
+      const choice = el('div', '', 'choice');
+      choice.append(el('span', `Option ${index + 1}`, 'ordinal'), el('strong', label));
+      if (marker) choice.append(el('span', marker, 'marker'));
+      item.append(choice);
+      return item;
+    }
+
+    function render() {
+      const max = Math.max(...votes);
+      const leaders = votes.flatMap((count, index) => max > 0 && count === max ? [index] : []);
+      summary.textContent = leaders.length === 0 ? 'No votes yet. Choose an option to vote.' :
+        leaders.length === 1 ? `Current leader: Option ${leaders[0] + 1}: ${labels[leaders[0]]}.` : 'The poll is tied.';
+      options.replaceChildren();
+      counts.replaceChildren();
+      labels.forEach((label, index) => {
+        const chosen = index === selection;
+        const option = row(label, index, chosen ? 'Your vote' : '', chosen);
+        const vote = el('button', 'Vote');
+        vote.type = 'button';
+        vote.disabled = selection !== undefined;
+        vote.setAttribute('aria-label', `Vote for option ${index + 1}: ${label}`);
+        vote.addEventListener('click', () => {
+          if (selection !== undefined) return;
+          selection = index;
+          votes[index]++;
+          render();
+          receipt.focus();
+        });
+        option.append(vote);
+        options.append(option);
+        const leader = leaders.includes(index);
+        const sole = leader && leaders.length === 1;
+        const result = row(label, index, sole ? 'Leader' : leader ? 'Tied for lead' : '', sole);
+        result.append(el('span', `${votes[index]} ${votes[index] === 1 ? 'vote' : 'votes'}`, 'count'));
+        counts.append(result);
+      });
+      receipt.hidden = selection === undefined;
+      if (selection !== undefined) receipt.textContent = `You voted for option ${selection + 1}: ${labels[selection]}.`;
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -159,38 +159,48 @@ section {
   font-weight: 700;
 }
 
-#creation.saved-poll ul {
+#creation.saved-poll ul,
+#results ul {
   list-style: none;
   margin: .65rem 0 0;
   padding: 0;
 }
 
-.saved-poll .vote-row {
+.saved-poll .vote-row,
+#results li {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .5rem;
   padding: .65rem .5rem;
   border-bottom: 1px solid var(--rule);
 }
 
-.saved-poll .vote-choice {
+.saved-poll .vote-row {
+  gap: .5rem;
+}
+
+.saved-poll .vote-choice,
+#results .result-choice {
   flex: 1 1 8rem;
   min-width: 0;
 }
 
 .saved-poll .vote-ordinal,
-.saved-poll .vote-marker {
+.saved-poll .vote-marker,
+#results .result-ordinal,
+#results .result-marker {
   display: block;
   font-size: .875rem;
 }
 
-.saved-poll .vote-row.is-selected {
+.saved-poll .vote-row.is-selected,
+#results .is-leader {
   background: var(--paper);
 }
 
 .saved-poll .vote-marker,
-.saved-poll .vote-receipt {
+.saved-poll .vote-receipt,
+#results .result-marker {
   color: var(--plum);
   font-weight: 700;
 }
@@ -216,6 +226,19 @@ section {
 
 #creation.saved-poll button:enabled:hover {
   background: var(--ink);
+}
+
+#results {
+  min-width: 0;
+}
+
+#results li {
+  gap: .35rem .65rem;
+}
+
+#results .result-count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (min-width: 40rem) {
