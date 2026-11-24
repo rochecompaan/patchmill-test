@@ -1,5 +1,5 @@
 import './style.css';
-import { castVote, createPoll, type Poll } from './poll';
+import { castVote, createPoll, getPollResults, type Poll } from './poll';
 
 const creation = document.querySelector<HTMLDivElement>('#creation')!;
 const form = creation.querySelector<HTMLFormElement>('#create-poll-form')!;
@@ -7,6 +7,8 @@ const question = form.querySelector<HTMLInputElement>('#poll-question')!;
 const fields = form.querySelector<HTMLDivElement>('#option-fields')!;
 const error = form.querySelector<HTMLParagraphElement>('#poll-error')!;
 const addOption = form.querySelector<HTMLButtonElement>('#add-option')!;
+const resultsSummary = document.querySelector<HTMLParagraphElement>('#results-summary')!;
+const resultsCounts = document.querySelector<HTMLUListElement>('#results-counts')!;
 
 let clearInputError: (() => void) | undefined;
 
@@ -50,6 +52,47 @@ function warnAboutDraft(event: BeforeUnloadEvent) {
   event.returnValue = true;
 }
 
+function renderResults(poll: Poll): void {
+  const { counts, leadingOptionIds } = getPollResults(poll);
+  const leaders = new Set(leadingOptionIds);
+  let summary = leaders.size > 1 ? 'The poll is tied.' : 'No votes yet. Choose an option to vote.';
+  const rows = document.createDocumentFragment();
+
+  for (const [index, { optionId, count }] of counts.entries()) {
+    const { label } = poll.options[index];
+    const leading = leaders.has(optionId);
+    const soleLeader = leading && leaders.size === 1;
+    const item = document.createElement('li');
+    const choice = document.createElement('div');
+    choice.className = 'result-choice';
+    const ordinal = document.createElement('span');
+    ordinal.className = 'result-ordinal';
+    ordinal.textContent = `Option ${index + 1}`;
+    const name = document.createElement('strong');
+    name.textContent = label;
+    choice.append(ordinal, name);
+    if (leading) {
+      const marker = document.createElement('span');
+      marker.className = 'result-marker';
+      marker.textContent = soleLeader ? 'Leader' : 'Tied for lead';
+      choice.append(marker);
+    }
+    if (soleLeader) {
+      item.classList.add('is-leader');
+      summary = `Current leader: ${ordinal.textContent}: ${label}.`;
+    }
+    const tally = document.createElement('span');
+    tally.className = 'result-count';
+    tally.textContent = `${count} ${count === 1 ? 'vote' : 'votes'}`;
+    item.append(choice, tally);
+    rows.append(item);
+  }
+
+  resultsCounts.replaceChildren(rows);
+  resultsCounts.hidden = false;
+  resultsSummary.textContent = summary;
+}
+
 function showPoll(poll: Poll) {
   window.removeEventListener('beforeunload', warnAboutDraft);
   const heading = document.createElement('h3');
@@ -62,6 +105,7 @@ function showPoll(poll: Poll) {
   receipt.className = 'vote-receipt';
   receipt.hidden = true;
   receipt.tabIndex = -1;
+  receipt.setAttribute('aria-describedby', resultsSummary.id);
 
   const list = document.createElement('ul');
   list.setAttribute('role', 'list');
@@ -100,6 +144,7 @@ function showPoll(poll: Poll) {
       row.classList.add('is-selected');
       receipt.textContent = `You voted for ${description}.`;
       receipt.hidden = false;
+      renderResults(currentPoll);
       receipt.focus();
     });
     row.append(choice, action);
@@ -108,6 +153,7 @@ function showPoll(poll: Poll) {
   }
   creation.classList.add('saved-poll');
   creation.replaceChildren(heading, receipt, list);
+  renderResults(poll);
   heading.focus();
 }
 

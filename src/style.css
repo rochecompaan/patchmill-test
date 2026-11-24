@@ -218,6 +218,50 @@ section {
   background: var(--ink);
 }
 
+#results {
+  min-width: 0;
+}
+
+#results ul {
+  list-style: none;
+  margin: .65rem 0 0;
+  padding: 0;
+}
+
+#results li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem .65rem;
+  padding: .65rem .5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+#results .result-choice {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+#results .result-ordinal,
+#results .result-marker {
+  display: block;
+  font-size: .875rem;
+}
+
+#results .result-marker {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+#results .is-leader {
+  background: var(--paper);
+}
+
+#results .result-count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 @media (min-width: 40rem) {
   .notices {
     grid-template-columns: repeat(2, minmax(0, 1fr));
