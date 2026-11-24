@@ -204,8 +204,12 @@ section {
   outline-offset: 3px;
 }
 
-.saved-poll .vote-row button {
+#saved-panel button {
   touch-action: manipulation;
+}
+
+#reset-error {
+  scroll-margin-block: .5rem;
 }
 
 #creation.saved-poll .vote-row button:enabled {

@@ -137,6 +137,7 @@ confirmReset.addEventListener('click', () => {
   if (!currentPoll || resetConfirmation.hidden) return;
   if (!store.clear()) {
     resetError.textContent = 'Could not reset this poll. Try again.';
+    resetError.scrollIntoView({ block: 'nearest' });
     return;
   }
   currentPoll = undefined;
